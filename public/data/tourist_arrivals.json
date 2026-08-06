@@ -1,0 +1,112 @@
+[
+  {
+    "nation": "Vanuatu",
+    "year": 2016,
+    "tourist_arrivals_index": 351600.0
+  },
+  {
+    "nation": "Vanuatu",
+    "year": 2017,
+    "tourist_arrivals_index": 332700.0
+  },
+  {
+    "nation": "Vanuatu",
+    "year": 2018,
+    "tourist_arrivals_index": 350200.0
+  },
+  {
+    "nation": "Vanuatu",
+    "year": 2019,
+    "tourist_arrivals_index": 256000.0
+  },
+  {
+    "nation": "Vanuatu",
+    "year": 2020,
+    "tourist_arrivals_index": 82400.0
+  },
+  {
+    "nation": "Vanuatu",
+    "year": 2022,
+    "tourist_arrivals_index": 65000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2016,
+    "tourist_arrivals_index": 963000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2017,
+    "tourist_arrivals_index": 1027000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2018,
+    "tourist_arrivals_index": 1058000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2019,
+    "tourist_arrivals_index": 969000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2020,
+    "tourist_arrivals_index": 168200.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2021,
+    "tourist_arrivals_index": 32000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2022,
+    "tourist_arrivals_index": 652200.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2023,
+    "tourist_arrivals_index": 929740.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2024,
+    "tourist_arrivals_index": 928938.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2016,
+    "tourist_arrivals_index": 86700.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2017,
+    "tourist_arrivals_index": 86600.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2018,
+    "tourist_arrivals_index": 77300.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2019,
+    "tourist_arrivals_index": 94000.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2020,
+    "tourist_arrivals_index": 11500.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2021,
+    "tourist_arrivals_index": 200.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2022,
+    "tourist_arrivals_index": 22300.0
+  }
+]

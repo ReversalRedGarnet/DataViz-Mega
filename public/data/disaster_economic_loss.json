@@ -1,0 +1,37 @@
+[
+  {
+    "nation": "Vanuatu",
+    "year": 2018,
+    "economic_loss_usd": 64500000.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2016,
+    "economic_loss_usd": 374109863.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2018,
+    "economic_loss_usd": 50247780.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2019,
+    "economic_loss_usd": 1090125.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2020,
+    "economic_loss_usd": 24247724.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2016,
+    "economic_loss_usd": 3050475.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2018,
+    "economic_loss_usd": 8579025.0
+  }
+]

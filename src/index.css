@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TYPE SCALE -- the small set of text roles reused across every
+   section, so a heading in BigPicture and a heading in MapView read
+   as the same design decision rather than two independent guesses.
+   New copy anywhere on the site should reach for one of these rather
+   than inventing a new size/weight/tracking combination:
+
+     Display (Hero's thesis only)   text-3xl md:text-5xl font-bold tracking-tight
+     Wordmark (Header only)         text-lg md:text-xl font-semibold tracking-tight
+     Section heading (h2)           text-xl font-semibold
+     Card/sub-heading (h3/h4)       text-sm font-medium  (or font-semibold for a
+                                     card that itself groups other cards, e.g.
+                                     the "Regional Snapshot" / insights headers)
+     Eyebrow (section-level framing, e.g. Hero's kicker)
+                                     text-sm font-semibold uppercase tracking-wide opacity-70
+     Meta label (card-level metadata, e.g. a stat tile's label)
+                                     text-xs uppercase tracking-wide opacity-70
+     Body copy                      text-sm opacity-80
+     Helper / secondary text        text-sm opacity-70 */
+
+@layer base {
+  body {
+    @apply bg-sand text-ink antialiased;
+    /* Belt-and-braces guard, not a fix in itself -- the actual overflow
+       source (ScrollProgress sizing itself off window.innerWidth,
+       which includes the scrollbar) is fixed at the component level.
+       This stays as a backstop so a future fixed/absolute element that
+       drifts a few pixels too wide can't reintroduce a sitewide
+       horizontal scrollbar; it should never be the thing actually
+       doing the clipping. */
+    overflow-x: hidden;
+  }
+
+  /* Site-wide custom cursor. !important is required, not just belt-
+     and-braces: the map markers used to set cursor via a D3 *inline*
+     style, and inline styles beat any external stylesheet rule
+     regardless of specificity short of !important. That inline rule
+     has been removed (see MapView.jsx), but !important stays as a
+     guarantee against anything else -- present or future -- reverting
+     to the OS pointer on hover, per the site's actual requirement. */
+  *,
+  *::before,
+  *::after {
+    cursor: url('/cursors/spear.svg') 2 2, auto !important;
+  }
+
+  /* Matching text-selection highlight, since the OS default blue would
+     be the one remaining unstyled system chrome on the page. */
+  ::selection {
+    background-color: #5b8fa3;
+    color: #faf7f0;
+  }
+
+  /* Visible keyboard focus ring for the SVG map markers, since browsers
+     don't consistently draw a default one on focusable SVG elements. */
+  .marker:focus-visible {
+    outline: 2px solid #24333a;
+    outline-offset: 2px;
+  }
+
+  /* Consistent, branded focus ring for real <button> elements (zoom,
+     reset, clear selection) instead of relying on each browser's
+     inconsistent default outline. */
+  button:focus-visible {
+    outline: 2px solid #24333a;
+    outline-offset: 2px;
+  }
+
+  /* Visible keyboard focus ring for inline "no data" notes (see
+     NoDataNote.jsx). These were previously plain outline-none with no
+     replacement -- meaning a keyboard user tabbing onto one got no
+     visible focus indicator at all, since a bare <span> has no other
+     native focus styling to fall back on. */
+  .data-note:focus-visible {
+    outline: 2px solid #24333a;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+}
+
+@layer utilities {
+  /* The site's one signature entrance animation -- every section, card,
+     bullet, and popover uses this same "pop" (scale + rise + fade with
+     a slight overshoot) rather than each spot inventing its own
+     transition. A gentle back-out easing gives it a bit of bounce
+     without feeling cartoonish.
+     Re-triggers on every mount, which is what's wanted for the
+     empty-state <-> chart-content swaps in RippleChain/ComparisonView,
+     since React unmounts/remounts that subtree each time selection
+     changes -- picking a country visibly "pops" its content in. */
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  .animate-pop-in {
+    animation: pop-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Tooltip-specific pop: same overshoot feel, but the transform has
+     to also carry the anchor offset (tooltip is positioned by its
+     bottom-center point, via -50%/-100%) baked in, since an
+     `animation`'s own transform replaces rather than composes with a
+     separately-applied utility transform. */
+  @keyframes tooltip-pop-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -100%) scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -100%) scale(1);
+    }
+  }
+  .animate-tooltip-pop-in {
+    animation: tooltip-pop-in 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop-in,
+  .animate-tooltip-pop-in {
+    animation: none;
+  }
+}
