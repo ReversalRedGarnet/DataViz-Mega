@@ -1,27 +1,14 @@
-// Cyclone Harold, April 2020 -- the shared "before/after" anchor used
-// by ComparisonView and the comparative-insights bullets in
-// RippleChain. Kept here rather than duplicated in each file.
+// Cyclone Harold, April 2020 -- the before/after anchor used by
+// ComparisonView and RippleChain's comparative insights.
 export const EVENT_YEAR = 2020
 
-// Shared metric definitions used by RippleChain and ComparisonView.
-// Filenames match the DATASETS dict in data-pipeline/clean_data.py.
+// Metric definitions used by RippleChain and ComparisonView.
+// Filenames match data-pipeline/clean_data.py's DATASETS dict.
 //
-// chartType picks the D3 chart best suited to each metric's actual data
-// shape (see RippleChain.jsx for the renderers):
-//   'bar'  -- disaster-style metrics that only have a handful of
-//             irregularly-spaced years on record (e.g. Fiji's economic
-//             loss skips 2017). A line connects across that gap and
-//             implies a trend that was never measured; a bar per year
-//             on record doesn't.
-//   'line' -- metrics reported every year for every country, where a
-//             continuous trend is the real story.
-//   'area' -- also continuous, but the *size* of the drop is the point
-//             (tourist arrivals cratering after Harold/COVID) -- a
-//             filled area reads that loss of volume more viscerally
-//             than a bare line.
-//
-// format() turns a raw number into the string shown in chart tooltips
-// and comparison cards, so a value never appears without its unit.
+// chartType: 'bar' for metrics with gaps in the year range (a line
+// would imply a trend across years never measured), 'line' for
+// continuous yearly data, 'area' when the drop in volume itself is
+// the point (tourist arrivals).
 export const METRICS = [
   {
     key: 'affected_persons',

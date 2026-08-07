@@ -1,13 +1,20 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import * as d3 from 'd3'
 import Section from './Section.jsx'
-import NoDataNote from './NoDataNote.jsx'
 import Tooltip from './Tooltip.jsx'
+import MetricSnapshotChart from './MetricSnapshotChart.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
-import { useTheme } from '../hooks/useTheme.jsx'
-import { resetSvg } from '../utils/d3helpers.js'
-import { renderSnapshotChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { METRICS, REFERENCE_YEAR } from '../utils/droughtMetrics.js'
+import { formatNationList } from '../utils/formatNationList.js'
+
+// Computed once at module load, not inside the component -- d3.format
+// returns a brand-new function object on every call, even with the
+// same string. Calling it inline in JSX would hand MetricSnapshotChart
+// a "changed" yTickFormat prop (by reference) on every re-render,
+// including the ones triggered by hovering the chart's own tooltip --
+// which would re-trigger its draw effect and replay the whole chart's
+// entrance animation on every hover/touch.
+const YTICK_FORMAT = d3.format('.2f')
 
 // Regional snapshot for the El Nino & Drought page -- same job
 // BigPicture's snapshot half plays for Cyclones (all nations, one
@@ -47,92 +54,31 @@ export default function DroughtSnapshot({ data, nations, style }) {
           drier. -1 or below is conventionally read as moderate drought.
         </p>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {METRICS.map((m, i) => (
-            <DroughtMetricSnapshot
-              key={m.key}
-              metric={m}
-              rows={snapshots[m.key]}
-              nations={nations}
-              showTooltip={showTooltip}
-              hideTooltip={hideTooltip}
-              index={i}
-            />
-          ))}
+          {METRICS.map((m, i) => {
+            const rows = snapshots[m.key]
+            const nationsMissing = nations.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
+            return (
+              <MetricSnapshotChart
+                key={m.key}
+                label={m.label}
+                ariaLabel={`${m.label}, December ${REFERENCE_YEAR}, by nation`}
+                rows={rows}
+                nationsMissing={nationsMissing}
+                missingNote={`No ${REFERENCE_YEAR} data available for ${formatNationList(nationsMissing)}.`}
+                emptyNote={`Data not available for ${REFERENCE_YEAR}.`}
+                format={m.format}
+                yTickFormat={YTICK_FORMAT}
+                showTooltip={showTooltip}
+                hideTooltip={hideTooltip}
+                index={i}
+              />
+            )
+          })}
         </div>
         <Tooltip tooltip={tooltip} />
       </div>
     </Section>
   )
-}
-
-function DroughtMetricSnapshot({ metric, rows, nations, showTooltip, hideTooltip, index }) {
-  const { label, format } = metric
-  const ref = useRef(null)
-  const { theme } = useTheme()
-  const nationsMissing = nations.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
-
-  useEffect(() => {
-    if (!rows || rows.length === 0 || !ref.current) return
-    const svg = resetSvg(ref, CHART_WIDTH, CHART_HEIGHT)
-    // SPI/SPEI run roughly -2..2 -- the chart's default axis format
-    // (SI-prefix, tuned for the Cyclone metrics' much larger numbers)
-    // would render 0.57 as "570m" here, so this passes a plain
-    // fixed-decimal formatter instead. See chartRenderers.jsx.
-    renderSnapshotChart(svg, { rows, format, showTooltip, hideTooltip, yTickFormat: d3.format('.2f'), theme })
-  }, [rows, format, showTooltip, hideTooltip, theme])
-
-  return (
-    <div
-      className="animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3"
-      style={{ animationDelay: `${index * 60}ms` }}
-    >
-      <h3 className="mb-1 text-sm font-medium">{label}</h3>
-      {rows.length > 0 ? (
-        <svg ref={ref} role="img" aria-label={`${label}, December ${REFERENCE_YEAR}, by nation`} className="h-auto w-full" />
-      ) : (
-        <NoDataNote showTooltip={showTooltip} hideTooltip={hideTooltip} className="block py-6 text-center text-sm italic opacity-70">
-          Data not available for {REFERENCE_YEAR}.
-        </NoDataNote>
-      )}
-      {rows.length > 0 && nationsMissing.length > 0 && (
-        <NoDataNote showTooltip={showTooltip} hideTooltip={hideTooltip} className="mt-1 inline-block text-xs italic opacity-70">
-          No {REFERENCE_YEAR} data available for {formatNationList(nationsMissing)}.
-        </NoDataNote>
-      )}
-      {/* Screen-reader-only data table, same pattern as every other
-          chart on the site -- see the matching comment in
-          RippleChain.jsx for why whitespace-normal matters here. */}
-      <table className="sr-only whitespace-normal">
-        <caption>
-          {label}, December {REFERENCE_YEAR}, by nation
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Country</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((d) => (
-            <tr key={d.nation}>
-              <td>{d.nation}</td>
-              <td>{d.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-// Same Oxford-comma list grammar as BigPicture.jsx's formatNationList
-// -- kept as a local copy rather than a shared import since it's a
-// three-line pure function and importing across a components/utils
-// boundary for something this small isn't worth the indirection.
-function formatNationList(names) {
-  if (names.length <= 1) return names.join('')
-  if (names.length === 2) return `${names[0]} and ${names[1]}`
-  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`
 }
 
 // One row per nation that has a REFERENCE_YEAR figure for this metric

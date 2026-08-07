@@ -1,13 +1,10 @@
-// Shared metric definitions for the Sea Level Rise page. Filenames
-// match data-pipeline/clean_sea_level_data.py's output.
+// Metric definitions for the Sea Level Rise page. Filenames match
+// clean_sea_level_data.py's output.
 //
-// The one time-series metric here is an ANOMALY, not a raw sea-level
-// reading -- see the long comment at the top of
-// clean_sea_level_data.py for why: each tide gauge station's raw
-// metres are relative to its own local benchmark, so raw values from
-// different stations aren't comparable to each other. Expressing each
-// station's own record as metres above/below ITS OWN full-record
-// average is what makes the numbers safe to compare across nations.
+// The time-series metric is an ANOMALY, not a raw reading: each tide
+// gauge's raw metres are relative to its own local benchmark, so raw
+// values aren't comparable across stations -- see
+// clean_sea_level_data.py for the full reasoning.
 export const METRICS = [
   {
     key: 'sea_level_anomaly',
@@ -19,12 +16,9 @@ export const METRICS = [
   },
 ]
 
-// Trend is a single derived number per nation (millimetres/year, via
-// ordinary least squares over that station's own annual means -- see
-// clean_sea_level_data.py), not a year-by-year series, so it doesn't
-// fit the METRICS shape above. Kept as its own small config so
-// SeaLevelSnapshot.jsx has a format function to match, the same way
-// every other metric on the site does.
+// A single derived number per nation (mm/year via OLS -- see
+// clean_sea_level_data.py), not a year-by-year series, so it's kept
+// separate from METRICS above.
 export const TREND_METRIC = {
   file: 'sea_level_trend.json',
   field: 'trend_mm_per_year',

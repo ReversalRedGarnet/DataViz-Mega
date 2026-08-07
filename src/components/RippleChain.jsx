@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { METRICS } from '../utils/metrics.js'
-import { resetSvg } from '../utils/d3helpers.js'
-import { renderMetricChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { buildComparativeInsights } from '../utils/insights.js'
 import { useTooltip } from '../hooks/useTooltip.js'
-import { useTheme } from '../hooks/useTheme.jsx'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
 import EmptyState from './EmptyState.jsx'
-import NoDataNote from './NoDataNote.jsx'
+import TrendChart from './TrendChart.jsx'
+import InsightsPanel from './InsightsPanel.jsx'
 import Tooltip from './Tooltip.jsx'
 
 // The connected sequence view: one small chart per stage of the chain,
@@ -64,119 +62,32 @@ export default function RippleChain({ data, selectedNations, style }) {
         <SelectionLegend selected={selectedNations} />
         <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {METRICS.map((m, i) => (
-            <MetricChart
+            <TrendChart
               key={m.key}
-              metric={m}
+              label={m.label}
               allRows={filteredByMetric[m.key]}
               nations={selectedNations}
+              valueField={m.field}
+              chartType={m.chartType}
+              format={m.format}
               showTooltip={showTooltip}
               hideTooltip={hideTooltip}
               index={i}
-              spanFull={i === METRICS.length - 1 && METRICS.length % 2 !== 0}
+              className={i === METRICS.length - 1 && METRICS.length % 2 !== 0 ? 'sm:col-span-2' : ''}
             />
           ))}
         </div>
 
         {insights && (
-          <div
-            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-surface/60 p-5"
-            style={{ animationDelay: '120ms' }}
-          >
-            <h3 className="mb-3 text-sm font-semibold">
-              {selectedNations[0]} vs. {selectedNations[1]}: similarities and differences
-            </h3>
-            <ul className="space-y-2 text-sm opacity-85">
-              {insights.map((insight, i) => (
-                <li
-                  key={insight.key}
-                  className="animate-pop-in flex gap-2"
-                  style={{ animationDelay: `${160 + i * 70}ms` }}
-                >
-                  <span aria-hidden="true" className="opacity-50">
-                    •
-                  </span>
-                  <span>{insight.text}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <InsightsPanel
+            title={`${selectedNations[0]} vs. ${selectedNations[1]}: similarities and differences`}
+            items={insights}
+            staggerItems
+          />
         )}
 
         <Tooltip tooltip={tooltip} />
       </div>
     </Section>
-  )
-}
-
-function MetricChart({ metric, allRows, nations, showTooltip, hideTooltip, index, spanFull }) {
-  const { key, label, field: valueField, chartType, format } = metric
-  const ref = useRef(null)
-  const { theme } = useTheme()
-  const nationsMissing = nations.filter((n) => !allRows.some((d) => d.nation === n))
-
-  useEffect(() => {
-    if (!allRows || allRows.length === 0 || !ref.current) return
-
-    const svg = resetSvg(ref, CHART_WIDTH, CHART_HEIGHT)
-    renderMetricChart(svg, { allRows, nations, valueField, chartType, format, showTooltip, hideTooltip, theme })
-  }, [allRows, nations, valueField, chartType, format, showTooltip, hideTooltip, theme])
-
-  return (
-    <div
-      key={key}
-      className={`animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3 ${spanFull ? 'sm:col-span-2' : ''}`}
-      style={{ animationDelay: `${index * 60}ms` }}
-    >
-      <h3 className="mb-1 text-sm font-medium">{label}</h3>
-      {allRows.length > 0 ? (
-        <svg ref={ref} role="img" aria-label={label} className="h-auto w-full" />
-      ) : (
-        <NoDataNote
-          showTooltip={showTooltip}
-          hideTooltip={hideTooltip}
-          className="block py-6 text-center text-sm italic opacity-70"
-        >
-          Data not available for this metric.
-        </NoDataNote>
-      )}
-      {allRows.length > 0 && nationsMissing.length > 0 && (
-        <NoDataNote
-          showTooltip={showTooltip}
-          hideTooltip={hideTooltip}
-          className="mt-1 inline-block text-xs italic opacity-70"
-        >
-          No data available for {nationsMissing.join(' and ')}.
-        </NoDataNote>
-      )}
-      {/* Screen-reader-only data table -- the chart above conveys shape
-          and trend visually, this gives the same numbers as text.
-
-          whitespace-normal overrides the nowrap .sr-only sets (and
-          which inherits into every cell) -- see the matching comment
-          in StormProfile.jsx for why an inherited nowrap on a table
-          can silently blow out the whole page's width. Nothing here
-          is long enough to trigger it today, but the mechanism is
-          identical, so it gets the same defensive fix rather than
-          waiting for a future data value to be the one that does. */}
-      <table className="sr-only whitespace-normal">
-        <caption>{label} by year and country</caption>
-        <thead>
-          <tr>
-            <th scope="col">Country</th>
-            <th scope="col">Year</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allRows.map((d) => (
-            <tr key={`${d.nation}-${d.year}`}>
-              <td>{d.nation}</td>
-              <td>{d.year}</td>
-              <td>{d[valueField]}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   )
 }
