@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import * as d3 from 'd3'
 import { METRICS, TREND_METRIC } from '../utils/seaLevelMetrics.js'
-import { resetSvg } from '../utils/d3helpers.js'
-import { renderMetricChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
-import { useTheme } from '../hooks/useTheme.jsx'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
 import EmptyState from './EmptyState.jsx'
-import NoDataNote from './NoDataNote.jsx'
+import TrendChart from './TrendChart.jsx'
+import InsightsPanel from './InsightsPanel.jsx'
 import Tooltip from './Tooltip.jsx'
 
 // The "compare" section for Sea Level Rise -- same role
@@ -24,9 +22,7 @@ import Tooltip from './Tooltip.jsx'
 //   style -- forwarded to the underlying Section
 export default function SeaLevelTrends({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
-  const { theme } = useTheme()
   const metric = METRICS[0]
-  const ref = useRef(null)
 
   const allRows = useMemo(() => {
     if (!data) return []
@@ -37,27 +33,6 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
     if (!data || selectedNations.length === 0) return null
     return buildTrendNote(data.trend ?? [], selectedNations)
   }, [data, selectedNations])
-
-  const nationsMissing = data ? selectedNations.filter((n) => !allRows.some((d) => d.nation === n)) : []
-
-  useEffect(() => {
-    if (!allRows || allRows.length === 0 || !ref.current) return
-    const svg = resetSvg(ref, CHART_WIDTH, CHART_HEIGHT)
-    // Sea-level anomalies are small (single-digit centimetres, plotted
-    // in metres) -- same reasoning as DroughtSnapshot.jsx for
-    // overriding the default SI-prefix axis format.
-    renderMetricChart(svg, {
-      allRows,
-      nations: selectedNations,
-      valueField: metric.field,
-      chartType: metric.chartType,
-      format: metric.format,
-      showTooltip,
-      hideTooltip,
-      yTickFormat: d3.format('.2f'),
-      theme,
-    })
-  }, [allRows, selectedNations, metric, showTooltip, hideTooltip, theme])
 
   if (!data) return <EmptyState tone="panel" style={style}>Sea level trend -- waiting on data.</EmptyState>
   if (!selectedNations || selectedNations.length === 0) {
@@ -77,58 +52,21 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
           stations' raw readings aren't shown side by side directly.
         </p>
         <SelectionLegend selected={selectedNations} />
-        <div className="mt-2 animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3">
-          {allRows.length > 0 ? (
-            <svg ref={ref} role="img" aria-label={metric.label} className="h-auto w-full" />
-          ) : (
-            <NoDataNote showTooltip={showTooltip} hideTooltip={hideTooltip} className="block py-6 text-center text-sm italic opacity-70">
-              Data not available for this metric.
-            </NoDataNote>
-          )}
-          {allRows.length > 0 && nationsMissing.length > 0 && (
-            <NoDataNote showTooltip={showTooltip} hideTooltip={hideTooltip} className="mt-1 inline-block text-xs italic opacity-70">
-              No data available for {nationsMissing.join(' and ')}.
-            </NoDataNote>
-          )}
-          <table className="sr-only whitespace-normal">
-            <caption>{metric.label} by year and country</caption>
-            <thead>
-              <tr>
-                <th scope="col">Country</th>
-                <th scope="col">Year</th>
-                <th scope="col">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allRows.map((d) => (
-                <tr key={`${d.nation}-${d.year}`}>
-                  <td>{d.nation}</td>
-                  <td>{d.year}</td>
-                  <td>{d[metric.field]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-2">
+          <TrendChart
+            label={metric.label}
+            allRows={allRows}
+            nations={selectedNations}
+            valueField={metric.field}
+            chartType={metric.chartType}
+            format={metric.format}
+            yTickFormat={d3.format('.2f')}
+            showTooltip={showTooltip}
+            hideTooltip={hideTooltip}
+          />
         </div>
 
-        {trendNote && (
-          <div
-            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-surface/60 p-5"
-            style={{ animationDelay: '120ms' }}
-          >
-            <h3 className="mb-3 text-sm font-semibold">Long-term trend</h3>
-            <ul className="space-y-2 text-sm opacity-85">
-              {trendNote.map((row) => (
-                <li key={row.key} className="flex gap-2">
-                  <span aria-hidden="true" className="opacity-50">
-                    •
-                  </span>
-                  <span>{row.text}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {trendNote && <InsightsPanel title="Long-term trend" items={trendNote} />}
 
         <Tooltip tooltip={tooltip} />
       </div>

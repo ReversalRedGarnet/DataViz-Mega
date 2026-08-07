@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import * as d3 from 'd3'
 import { METRICS, DROUGHT_THRESHOLD } from '../utils/droughtMetrics.js'
-import { resetSvg } from '../utils/d3helpers.js'
-import { renderMetricChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
-import { useTheme } from '../hooks/useTheme.jsx'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
 import EmptyState from './EmptyState.jsx'
-import NoDataNote from './NoDataNote.jsx'
+import TrendChart from './TrendChart.jsx'
+import InsightsPanel from './InsightsPanel.jsx'
 import Tooltip from './Tooltip.jsx'
 
 // The "compare" section for El Nino & Drought -- plays the role
@@ -16,11 +14,7 @@ import Tooltip from './Tooltip.jsx'
 // rather than a single event: a full 1958-2021 line per nation
 // instead of a before/after snapshot, and a comparative note about how
 // OFTEN each nation has crossed into drought rather than how much a
-// single event changed things. Kept as its own component rather than
-// generalising RippleChain.jsx to cover both shapes, since the two
-// concepts (one event's before/after vs. a recurring cycle's
-// frequency) don't actually share logic beyond the charting
-// primitives both already pull from chartRenderers.jsx/d3helpers.js.
+// single event changed things.
 //
 // Props:
 //   data -- { [metricKey]: rows }, from useDroughtData()
@@ -68,11 +62,15 @@ export default function DroughtTrends({ data, selectedNations, style }) {
         <SelectionLegend selected={selectedNations} />
         <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {METRICS.map((m, i) => (
-            <DroughtMetricChart
+            <TrendChart
               key={m.key}
-              metric={m}
+              label={m.label}
               allRows={filteredByMetric[m.key]}
               nations={selectedNations}
+              valueField={m.field}
+              chartType={m.chartType}
+              format={m.format}
+              yTickFormat={d3.format('.2f')}
               showTooltip={showTooltip}
               hideTooltip={hideTooltip}
               index={i}
@@ -81,24 +79,10 @@ export default function DroughtTrends({ data, selectedNations, style }) {
         </div>
 
         {droughtYearCounts && (
-          <div
-            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-surface/60 p-5"
-            style={{ animationDelay: '120ms' }}
-          >
-            <h3 className="mb-3 text-sm font-semibold">
-              {selectedNations[0]} vs. {selectedNations[1]}: how often has each crossed into drought?
-            </h3>
-            <ul className="space-y-2 text-sm opacity-85">
-              {droughtYearCounts.map((row) => (
-                <li key={row.key} className="flex gap-2">
-                  <span aria-hidden="true" className="opacity-50">
-                    •
-                  </span>
-                  <span>{row.text}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <InsightsPanel
+            title={`${selectedNations[0]} vs. ${selectedNations[1]}: how often has each crossed into drought?`}
+            items={droughtYearCounts}
+          />
         )}
 
         <Tooltip tooltip={tooltip} />
@@ -107,80 +91,9 @@ export default function DroughtTrends({ data, selectedNations, style }) {
   )
 }
 
-function DroughtMetricChart({ metric, allRows, nations, showTooltip, hideTooltip, index }) {
-  const { key, label, field: valueField, chartType, format } = metric
-  const ref = useRef(null)
-  const { theme } = useTheme()
-  const nationsMissing = nations.filter((n) => !allRows.some((d) => d.nation === n))
-
-  useEffect(() => {
-    if (!allRows || allRows.length === 0 || !ref.current) return
-    const svg = resetSvg(ref, CHART_WIDTH, CHART_HEIGHT)
-    // Same reasoning as DroughtSnapshot.jsx -- SPI/SPEI are small
-    // signed decimals, not the large non-negative counts/currency the
-    // default SI-prefix axis format was tuned for.
-    renderMetricChart(svg, {
-      allRows,
-      nations,
-      valueField,
-      chartType,
-      format,
-      showTooltip,
-      hideTooltip,
-      yTickFormat: d3.format('.2f'),
-      theme,
-    })
-  }, [allRows, nations, valueField, chartType, format, showTooltip, hideTooltip, theme])
-
-  return (
-    <div
-      key={key}
-      className="animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3"
-      style={{ animationDelay: `${index * 60}ms` }}
-    >
-      <h3 className="mb-1 text-sm font-medium">{label}</h3>
-      {allRows.length > 0 ? (
-        <svg ref={ref} role="img" aria-label={label} className="h-auto w-full" />
-      ) : (
-        <NoDataNote showTooltip={showTooltip} hideTooltip={hideTooltip} className="block py-6 text-center text-sm italic opacity-70">
-          Data not available for this metric.
-        </NoDataNote>
-      )}
-      {allRows.length > 0 && nationsMissing.length > 0 && (
-        <NoDataNote showTooltip={showTooltip} hideTooltip={hideTooltip} className="mt-1 inline-block text-xs italic opacity-70">
-          No data available for {nationsMissing.join(' and ')}.
-        </NoDataNote>
-      )}
-      <table className="sr-only whitespace-normal">
-        <caption>{label} by year and country</caption>
-        <thead>
-          <tr>
-            <th scope="col">Country</th>
-            <th scope="col">Year</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allRows.map((d) => (
-            <tr key={`${d.nation}-${d.year}`}>
-              <td>{d.nation}</td>
-              <td>{d.year}</td>
-              <td>{d[valueField]}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
 // Counts, for each nation, how many years in its own SPI-12 record hit
 // DROUGHT_THRESHOLD (-1) or below -- a direct, real readout of the
 // already-standard index (see droughtMetrics.js), not a new score.
-// Mirrors insights.js's shape (one entry per relevant comparison) but
-// isn't imported from there: insights.js is built entirely around
-// EVENT_YEAR before/after, which has no equivalent for a cycle that
-// repeats every few years across a 64-year record.
 function buildDroughtYearComparison(data, nationA, nationB) {
   const spi = data.spi12 ?? []
   const rowsA = spi.filter((d) => d.nation === nationA)
