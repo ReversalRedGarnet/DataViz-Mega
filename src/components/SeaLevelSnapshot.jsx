@@ -4,6 +4,7 @@ import Section from './Section.jsx'
 import NoDataNote from './NoDataNote.jsx'
 import Tooltip from './Tooltip.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { useTheme } from '../hooks/useTheme.jsx'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderSnapshotChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { TREND_METRIC } from '../utils/seaLevelMetrics.js'
@@ -24,6 +25,7 @@ import { TREND_METRIC } from '../utils/seaLevelMetrics.js'
 //   style -- forwarded to the underlying Section
 export default function SeaLevelSnapshot({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
+  const { theme } = useTheme()
   const ref = useRef(null)
 
   const rows = useMemo(() => {
@@ -48,8 +50,9 @@ export default function SeaLevelSnapshot({ data, nations, style }) {
       showTooltip,
       hideTooltip,
       yTickFormat: d3.format('.1f'),
+      theme,
     })
-  }, [rows, showTooltip, hideTooltip])
+  }, [rows, showTooltip, hideTooltip, theme])
 
   if (!data) {
     return (
@@ -68,7 +71,7 @@ export default function SeaLevelSnapshot({ data, nations, style }) {
           tide-gauge record. Unlike raw sea-level readings, a rate like this IS comparable station to station -- see
           this page's footer for why raw readings aren't.
         </p>
-        <div className="animate-pop-in rounded-xl border border-ink/10 bg-white/60 p-3">
+        <div className="animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3">
           {rows.length > 0 ? (
             <svg
               ref={ref}

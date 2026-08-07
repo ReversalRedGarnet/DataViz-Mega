@@ -3,6 +3,7 @@ import Section from './Section.jsx'
 import NoDataNote from './NoDataNote.jsx'
 import Tooltip from './Tooltip.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { useTheme } from '../hooks/useTheme.jsx'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderSnapshotChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { NATIONS } from './MapView.jsx'
@@ -103,7 +104,7 @@ export default function BigPicture({ data, style }) {
 function StatTile({ index, label, value, detail }) {
   return (
     <div
-      className="animate-pop-in rounded-xl border border-ink/10 bg-white/60 p-4"
+      className="animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-4"
       style={{ animationDelay: `${index * 90}ms` }}
     >
       <p className="text-xs uppercase tracking-wide opacity-70">{label}</p>
@@ -116,17 +117,18 @@ function StatTile({ index, label, value, detail }) {
 function MetricSnapshot({ metric, rows, showTooltip, hideTooltip, index, spanFull }) {
   const { label, format } = metric
   const ref = useRef(null)
+  const { theme } = useTheme()
   const nationsMissing = NATIONS.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
 
   useEffect(() => {
     if (!rows || rows.length === 0 || !ref.current) return
     const svg = resetSvg(ref, CHART_WIDTH, CHART_HEIGHT)
-    renderSnapshotChart(svg, { rows, format, showTooltip, hideTooltip })
-  }, [rows, format, showTooltip, hideTooltip])
+    renderSnapshotChart(svg, { rows, format, showTooltip, hideTooltip, theme })
+  }, [rows, format, showTooltip, hideTooltip, theme])
 
   return (
     <div
-      className={`animate-pop-in rounded-xl border border-ink/10 bg-white/60 p-3 ${spanFull ? 'sm:col-span-2' : ''}`}
+      className={`animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3 ${spanFull ? 'sm:col-span-2' : ''}`}
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <h4 className="mb-1 text-sm font-medium">{label}</h4>

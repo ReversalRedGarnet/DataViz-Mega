@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { SELECTION_COLORS } from './theme.js'
+import { SELECTION_COLORS, CHART_INK, CHART_SURFACE } from './theme.js'
 import { motionDuration } from './motion.js'
 
 export const CHART_WIDTH = 260
@@ -82,11 +82,31 @@ function snapshotTooltip(row, format) {
 
 export function renderMetricChart(
   svg,
-  { allRows, nations, valueField, chartType, format, showTooltip, hideTooltip, yTickFormat = d3.format('~s') }
+  {
+    allRows,
+    nations,
+    valueField,
+    chartType,
+    format,
+    showTooltip,
+    hideTooltip,
+    yTickFormat = d3.format('~s'),
+    theme = 'light',
+  }
 ) {
   const width = CHART_WIDTH
   const height = CHART_HEIGHT
   const margin = CHART_MARGIN
+  // Axis text/gridlines/point-halos are the only marks in this chart
+  // that were ever literally ink/sand-coloured -- the bars/lines/
+  // points themselves use SELECTION_COLORS, a fixed accent pair
+  // that's already legible on both a light and a dark card (see
+  // theme.js). Callers pass the current theme (see useTheme.jsx) so
+  // these two stay correct without needing a redraw hack beyond the
+  // normal "theme is a dependency of the draw effect" each chart-
+  // owning component already does.
+  const ink = CHART_INK[theme] ?? CHART_INK.light
+  const surface = CHART_SURFACE[theme] ?? CHART_SURFACE.light
 
   const color = d3.scaleOrdinal(nations, SELECTION_COLORS)
 
@@ -120,10 +140,10 @@ export function renderMetricChart(
         .tickSize(-(width - margin.left - margin.right))
     )
   yAxisG.select('.domain').remove()
-  yAxisG.selectAll('.tick line').attr('stroke', '#24333A').attr('stroke-opacity', 0.08)
+  yAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
   yAxisG
     .selectAll('.tick text')
-    .attr('fill', '#24333A')
+    .attr('fill', ink)
     .attr('fill-opacity', 0.65)
     .attr('font-size', 9)
     .attr('dx', -2)
@@ -132,9 +152,9 @@ export function renderMetricChart(
     .append('g')
     .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(isBand ? d3.axisBottom(x).tickSizeOuter(0) : d3.axisBottom(x).ticks(4).tickFormat(d3.format('d')))
-  xAxisG.select('.domain').attr('stroke', '#24333A').attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick line').attr('stroke', '#24333A').attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick text').attr('fill', '#24333A').attr('fill-opacity', 0.7).attr('font-size', 9)
+  xAxisG.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  xAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  xAxisG.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
 
   function wireMarkInteractions(selection, nation, growTo) {
     selection
@@ -245,7 +265,7 @@ export function renderMetricChart(
       .attr('cy', (d) => y(d[valueField]))
       .attr('r', 0)
       .attr('fill', color(nation))
-      .attr('stroke', '#FAF7F0')
+      .attr('stroke', surface)
       .attr('stroke-width', 1.5)
 
     wireMarkInteractions(points, nation, 5.5)
@@ -264,10 +284,12 @@ export const STORM_CHART_HEIGHT = 210
 const STORM_CHART_MARGIN = { top: 16, right: 40, bottom: 34, left: 38 }
 const STORM_POINT_COLOR = '#5B8FA3'
 
-export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip }) {
+export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip, theme = 'light' }) {
   const width = STORM_CHART_WIDTH
   const height = STORM_CHART_HEIGHT
   const margin = STORM_CHART_MARGIN
+  const ink = CHART_INK[theme] ?? CHART_INK.light
+  const surface = CHART_SURFACE[theme] ?? CHART_SURFACE.light
 
   const x = d3.scaleLinear().domain([0.5, 5.5]).range([margin.left, width - margin.right])
   const y = d3
@@ -287,10 +309,10 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
         .tickSize(-(width - margin.left - margin.right))
     )
   yAxisG.select('.domain').remove()
-  yAxisG.selectAll('.tick line').attr('stroke', '#24333A').attr('stroke-opacity', 0.08)
+  yAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
   yAxisG
     .selectAll('.tick text')
-    .attr('fill', '#24333A')
+    .attr('fill', ink)
     .attr('fill-opacity', 0.65)
     .attr('font-size', 9)
     .attr('dx', -2)
@@ -299,9 +321,9 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
     .append('g')
     .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format('d')))
-  xAxisG.select('.domain').attr('stroke', '#24333A').attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick line').attr('stroke', '#24333A').attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick text').attr('fill', '#24333A').attr('fill-opacity', 0.7).attr('font-size', 9)
+  xAxisG.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  xAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  xAxisG.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
 
   svg
     .append('text')
@@ -309,7 +331,7 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
     .attr('y', height - 6)
     .attr('text-anchor', 'middle')
     .attr('font-size', 9)
-    .attr('fill', '#24333A')
+    .attr('fill', ink)
     .attr('fill-opacity', 0.6)
     .text('Storm category at closest approach')
 
@@ -318,7 +340,7 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
     .attr('transform', `translate(12, ${height / 2}) rotate(-90)`)
     .attr('text-anchor', 'middle')
     .attr('font-size', 9)
-    .attr('fill', '#24333A')
+    .attr('fill', ink)
     .attr('fill-opacity', 0.6)
     .text('Deaths')
 
@@ -332,7 +354,7 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
     .attr('r', 0)
     .attr('fill', STORM_POINT_COLOR)
     .attr('fill-opacity', 0.85)
-    .attr('stroke', '#FAF7F0')
+    .attr('stroke', surface)
     .attr('stroke-width', 1.5)
     .style('cursor', 'pointer')
     .on('pointerenter pointermove', function (event, d) {
@@ -360,7 +382,7 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
     .attr('x', (d) => x(d.category + (d.dodge ?? 0)) + 9)
     .attr('y', (d) => y(d.deaths) - 9)
     .attr('font-size', 9)
-    .attr('fill', '#24333A')
+    .attr('fill', ink)
     .attr('fill-opacity', 0)
     .text((d) => d.name)
     .transition()
@@ -371,10 +393,14 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip })
 
 const SNAPSHOT_BAR_COLOR = '#5B8FA3'
 
-export function renderSnapshotChart(svg, { rows, format, showTooltip, hideTooltip, yTickFormat = d3.format('~s') }) {
+export function renderSnapshotChart(
+  svg,
+  { rows, format, showTooltip, hideTooltip, yTickFormat = d3.format('~s'), theme = 'light' }
+) {
   const width = CHART_WIDTH
   const height = CHART_HEIGHT
   const margin = CHART_MARGIN
+  const ink = CHART_INK[theme] ?? CHART_INK.light
 
   const x = d3
     .scaleBand()
@@ -398,10 +424,10 @@ export function renderSnapshotChart(svg, { rows, format, showTooltip, hideToolti
         .tickSize(-(width - margin.left - margin.right))
     )
   yAxisG.select('.domain').remove()
-  yAxisG.selectAll('.tick line').attr('stroke', '#24333A').attr('stroke-opacity', 0.08)
+  yAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
   yAxisG
     .selectAll('.tick text')
-    .attr('fill', '#24333A')
+    .attr('fill', ink)
     .attr('fill-opacity', 0.65)
     .attr('font-size', 9)
     .attr('dx', -2)
@@ -410,9 +436,9 @@ export function renderSnapshotChart(svg, { rows, format, showTooltip, hideToolti
     .append('g')
     .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).tickSizeOuter(0).tickFormat((d) => d.split(' ')[0]))
-  xAxisG.select('.domain').attr('stroke', '#24333A').attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick line').attr('stroke', '#24333A').attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick text').attr('fill', '#24333A').attr('fill-opacity', 0.7).attr('font-size', 9)
+  xAxisG.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  xAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  xAxisG.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
 
   const bars = svg
     .selectAll('rect.snapshot-bar')

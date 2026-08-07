@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import Section from './Section.jsx'
 import Tooltip from './Tooltip.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { useTheme } from '../hooks/useTheme.jsx'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderStormProfileChart, STORM_CHART_WIDTH, STORM_CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 
@@ -46,12 +47,13 @@ export const STORM_PROFILE = [
 export default function StormProfile({ style }) {
   const ref = useRef(null)
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
+  const { theme } = useTheme()
 
   useEffect(() => {
     if (!ref.current) return
     const svg = resetSvg(ref, STORM_CHART_WIDTH, STORM_CHART_HEIGHT)
-    renderStormProfileChart(svg, { rows: STORM_PROFILE, showTooltip, hideTooltip })
-  }, [showTooltip, hideTooltip])
+    renderStormProfileChart(svg, { rows: STORM_PROFILE, showTooltip, hideTooltip, theme })
+  }, [showTooltip, hideTooltip, theme])
 
   return (
     <Section style={style}>

@@ -371,7 +371,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
           <button
             type="button"
             onClick={() => zoomBy(1.5)}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/50 shadow-sm backdrop-blur-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:bg-white/70 active:scale-90"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-surface/50 shadow-sm backdrop-blur-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:bg-surface/70 active:scale-90"
             aria-label="Zoom in"
           >
             <MapControlIcon kind="zoomIn" />
@@ -379,7 +379,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
           <button
             type="button"
             onClick={() => zoomBy(1 / 1.5)}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/50 shadow-sm backdrop-blur-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:bg-white/70 active:scale-90"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-surface/50 shadow-sm backdrop-blur-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:bg-surface/70 active:scale-90"
             aria-label="Zoom out"
           >
             <MapControlIcon kind="zoomOut" />
@@ -387,7 +387,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
           <button
             type="button"
             onClick={resetView}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/50 shadow-sm backdrop-blur-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:bg-white/70 active:scale-90"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-surface/50 shadow-sm backdrop-blur-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 hover:bg-surface/70 active:scale-90"
             aria-label="Reset view"
           >
             <MapControlIcon kind="reset" />

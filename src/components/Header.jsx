@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import ScrollProgress from './ScrollProgress.jsx'
+import SectionNav from './SectionNav.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 import { HAZARDS } from '../content/hazards.js'
 
 // Home plus every hazard page, in the order they should appear in the
@@ -64,17 +66,30 @@ export default function Header({ onHeightChange }) {
             separated by a hairline rule rather than just stacking two
             same-weight lines. Tracking-tight on the wordmark and a
             light italic on the thesis give the two roles distinct
-            voices instead of one undifferentiated block of text. */}
-        <div className="flex flex-col gap-0.5 md:flex-row md:items-baseline md:gap-3">
-          <Link
-            to="/"
-            className="rounded text-lg font-semibold leading-tight tracking-tight text-ink hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink md:text-xl"
-          >
-            Ripple
-          </Link>
-          <p className="text-xs italic leading-snug text-ink/70 md:border-l md:border-ink/15 md:pl-3 md:text-sm">
-            Climate doesn't create inequality. It reveals it.
-          </p>
+            voices instead of one undifferentiated block of text.
+            Wordmark is deliberately large -- text-2xl/4xl, a step up
+            from its original text-lg/xl -- so the header reads as an
+            actual masthead that fills the space it's given rather
+            than a small label floating in mostly-empty padding.
+            SectionNav/ThemeToggle sit in their own group on the right
+            so they read as controls, not as part of the wordmark/
+            thesis reading line. */}
+        <div className="flex items-start justify-between gap-3 md:items-baseline">
+          <div className="flex flex-col gap-0.5 md:flex-row md:items-baseline md:gap-3">
+            <Link
+              to="/"
+              className="rounded text-2xl font-bold leading-tight tracking-tight text-ink hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink md:text-4xl"
+            >
+              Ripple
+            </Link>
+            <p className="text-sm italic leading-snug text-ink/70 md:border-l md:border-ink/15 md:pl-3 md:text-lg">
+              Climate doesn't create inequality. It reveals it.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-1">
+            <SectionNav />
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Nav row: Home plus every hazard page. Underline-on-active

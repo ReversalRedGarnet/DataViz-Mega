@@ -8,7 +8,8 @@ import CitationPanel from '../components/CitationPanel.jsx'
 import PacificBorder from '../components/PacificBorder.jsx'
 import { useSelection } from '../hooks/useSelection.js'
 import { useRippleData } from '../hooks/useRippleData.js'
-import { SECTION_COLORS } from '../utils/theme.js'
+import { useTheme } from '../hooks/useTheme.jsx'
+import { sectionColorsFor } from '../utils/theme.js'
 
 // The original Ripple site, unchanged in substance -- this is the
 // exact content that used to live directly in App.jsx before the site
@@ -76,6 +77,12 @@ function selectionAnnouncement(selected) {
 export default function CyclonesPage() {
   const data = useRippleData()
   const { selected, toggle, clear } = useSelection()
+  const { theme } = useTheme()
+  // Read once per render rather than inline at each PacificBorder call
+  // -- see theme.js: this must stay a plain object lookup (not a
+  // hook), since it just resolves which hex map to read from based on
+  // the theme value useTheme() already gave us.
+  const colors = sectionColorsFor(theme)
 
   const [heroTone, stormTone, bigPictureTone, mapTone, rippleTone, comparisonTone] = SECTION_TONES
 
@@ -88,19 +95,33 @@ export default function CyclonesPage() {
         {selectionAnnouncement(selected)}
       </div>
 
-      <Hero style={delayStyle(0)} />
-      <PacificBorder colorAbove={SECTION_COLORS[heroTone]} colorBelow={SECTION_COLORS[stormTone]} />
-      <StormProfile style={delayStyle(1)} />
-      <PacificBorder colorAbove={SECTION_COLORS[stormTone]} colorBelow={SECTION_COLORS[bigPictureTone]} />
-      <BigPicture data={data} style={delayStyle(2)} />
-      <PacificBorder colorAbove={SECTION_COLORS[bigPictureTone]} colorBelow={SECTION_COLORS[mapTone]} />
-      <MapView selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(3)} />
-      <PacificBorder colorAbove={SECTION_COLORS[mapTone]} colorBelow={SECTION_COLORS[rippleTone]} />
-      <RippleChain data={data} selectedNations={selected} style={delayStyle(4)} />
-      <PacificBorder colorAbove={SECTION_COLORS[rippleTone]} colorBelow={SECTION_COLORS[comparisonTone]} />
-      <ComparisonView data={data} selectedNations={selected} style={delayStyle(5)} />
-      <PacificBorder colorAbove={SECTION_COLORS[comparisonTone]} colorBelow={SECTION_COLORS[FOOTER_TONE]} />
-      <CitationPanel sources={DATA_SOURCES} style={delayStyle(6)} />
+      <div id="top">
+        <Hero style={delayStyle(0)} />
+      </div>
+      <PacificBorder colorAbove={colors[heroTone]} colorBelow={colors[stormTone]} />
+      <div id="storm-profile">
+        <StormProfile style={delayStyle(1)} />
+      </div>
+      <PacificBorder colorAbove={colors[stormTone]} colorBelow={colors[bigPictureTone]} />
+      <div id="big-picture">
+        <BigPicture data={data} style={delayStyle(2)} />
+      </div>
+      <PacificBorder colorAbove={colors[bigPictureTone]} colorBelow={colors[mapTone]} />
+      <div id="map">
+        <MapView selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(3)} />
+      </div>
+      <PacificBorder colorAbove={colors[mapTone]} colorBelow={colors[rippleTone]} />
+      <div id="ripple-chain">
+        <RippleChain data={data} selectedNations={selected} style={delayStyle(4)} />
+      </div>
+      <PacificBorder colorAbove={colors[rippleTone]} colorBelow={colors[comparisonTone]} />
+      <div id="compare">
+        <ComparisonView data={data} selectedNations={selected} style={delayStyle(5)} />
+      </div>
+      <PacificBorder colorAbove={colors[comparisonTone]} colorBelow={colors[FOOTER_TONE]} />
+      <div id="sources">
+        <CitationPanel sources={DATA_SOURCES} style={delayStyle(6)} />
+      </div>
     </>
   )
 }

@@ -7,7 +7,8 @@ import DroughtTrends from '../components/DroughtTrends.jsx'
 import CitationPanel from '../components/CitationPanel.jsx'
 import { useSelection } from '../hooks/useSelection.js'
 import { useDroughtData } from '../hooks/useDroughtData.js'
-import { SECTION_COLORS } from '../utils/theme.js'
+import { useTheme } from '../hooks/useTheme.jsx'
+import { sectionColorsFor } from '../utils/theme.js'
 
 // El Niño reaches every Pacific nation on roughly the same 2-7 year
 // cycle; which nations have water security when it arrives is a
@@ -88,6 +89,8 @@ function selectionAnnouncement(selected) {
 export default function ElNinoDroughtPage() {
   const { selected, toggle, clear } = useSelection()
   const data = useDroughtData()
+  const { theme } = useTheme()
+  const colors = sectionColorsFor(theme)
   const [heroTone, glanceTone, snapshotTone, mapTone, compareTone] = SECTION_TONES
 
   return (
@@ -96,71 +99,83 @@ export default function ElNinoDroughtPage() {
         {selectionAnnouncement(selected)}
       </div>
 
-      <PageHero
-        kicker="Recurring, roughly every 2–7 years · one oscillation, uneven readiness."
-        headline="El Niño reaches every Pacific nation on the same rough cycle. Water security does not."
-        body="El Niño and La Niña are opposite phases of the El Niño–Southern Oscillation (ENSO), a natural, recurring shift in Pacific Ocean temperatures and winds. During El Niño, rainfall that would normally fall over the western Pacific shifts east, leaving many Pacific Island nations drier than usual for months at a time. The oscillation itself is natural and shared. What a nation has to draw on when it arrives — water storage, groundwater access, how many other stresses it's already carrying — is not."
-        cta="Scroll to explore the nations being tracked here."
-        style={delayStyle(0)}
-      />
+      <div id="top">
+        <PageHero
+          kicker="Recurring, roughly every 2–7 years · one oscillation, uneven readiness."
+          headline="El Niño reaches every Pacific nation on the same rough cycle. Water security does not."
+          body="El Niño and La Niña are opposite phases of the El Niño–Southern Oscillation (ENSO), a natural, recurring shift in Pacific Ocean temperatures and winds. During El Niño, rainfall that would normally fall over the western Pacific shifts east, leaving many Pacific Island nations drier than usual for months at a time. The oscillation itself is natural and shared. What a nation has to draw on when it arrives — water storage, groundwater access, how many other stresses it's already carrying — is not."
+          cta="Scroll to explore the nations being tracked here."
+          style={delayStyle(0)}
+        />
+      </div>
 
-      <PacificBorder colorAbove={SECTION_COLORS[heroTone]} colorBelow={SECTION_COLORS[glanceTone]} />
+      <PacificBorder colorAbove={colors[heroTone]} colorBelow={colors[glanceTone]} />
 
-      <Section style={delayStyle(1)}>
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mb-2 text-xl font-semibold">El Niño & Drought at a Glance</h2>
-          <div className="max-w-2xl space-y-3 text-sm opacity-80">
-            <p>
-              ENSO cycles between El Niño and La Niña roughly every two to seven years, and has done so for as long
-              as it's been observed — it isn't itself a product of a warming climate. What ties it to this site's
-              broader thesis is the same pattern as Cyclone Harold: one shared physical driver, unevenly distributed
-              consequences.
-            </p>
-            <p>
-              Nations with more water storage infrastructure, more diversified agriculture, and more fiscal room to
-              respond quickly tend to weather an El Niño drought differently than nations without those things —
-              regardless of how strong that particular El Niño is.
-            </p>
-            <p className="opacity-70">
-              The charts below are real: SPI-12 and SPEI-12, the World Bank Pacific Observatory's own drought
-              indices for these five nations, running from 1958 to 2021 (the source's own record ends there). They
-              show how wet or dry each year was relative to that nation's own long-term baseline — not yet the
-              human side of the story (reported impact, water storage capacity), which remains a "next in the
-              pipeline" item.
-            </p>
+      <div id="glance">
+        <Section style={delayStyle(1)}>
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-2 text-xl font-semibold">El Niño & Drought at a Glance</h2>
+            <div className="max-w-2xl space-y-3 text-sm opacity-80">
+              <p>
+                ENSO cycles between El Niño and La Niña roughly every two to seven years, and has done so for as long
+                as it's been observed — it isn't itself a product of a warming climate. What ties it to this site's
+                broader thesis is the same pattern as Cyclone Harold: one shared physical driver, unevenly distributed
+                consequences.
+              </p>
+              <p>
+                Nations with more water storage infrastructure, more diversified agriculture, and more fiscal room to
+                respond quickly tend to weather an El Niño drought differently than nations without those things —
+                regardless of how strong that particular El Niño is.
+              </p>
+              <p className="opacity-70">
+                The charts below are real: SPI-12 and SPEI-12, the World Bank Pacific Observatory's own drought
+                indices for these five nations, running from 1958 to 2021 (the source's own record ends there). They
+                show how wet or dry each year was relative to that nation's own long-term baseline — not yet the
+                human side of the story (reported impact, water storage capacity), which remains a "next in the
+                pipeline" item.
+              </p>
+            </div>
           </div>
-        </div>
-      </Section>
+        </Section>
+      </div>
 
-      <PacificBorder colorAbove={SECTION_COLORS[glanceTone]} colorBelow={SECTION_COLORS[snapshotTone]} />
+      <PacificBorder colorAbove={colors[glanceTone]} colorBelow={colors[snapshotTone]} />
 
-      <DroughtSnapshot data={data} nations={NATIONS} style={delayStyle(2)} />
+      <div id="snapshot">
+        <DroughtSnapshot data={data} nations={NATIONS} style={delayStyle(2)} />
+      </div>
 
-      <PacificBorder colorAbove={SECTION_COLORS[snapshotTone]} colorBelow={SECTION_COLORS[mapTone]} />
+      <PacificBorder colorAbove={colors[snapshotTone]} colorBelow={colors[mapTone]} />
 
-      <MapView nations={NATIONS} selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(3)} />
+      <div id="map">
+        <MapView nations={NATIONS} selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(3)} />
+      </div>
 
-      <PacificBorder colorAbove={SECTION_COLORS[mapTone]} colorBelow={SECTION_COLORS[compareTone]} />
+      <PacificBorder colorAbove={colors[mapTone]} colorBelow={colors[compareTone]} />
 
-      <DroughtTrends data={data} selectedNations={selected} style={delayStyle(4)} />
+      <div id="trends">
+        <DroughtTrends data={data} selectedNations={selected} style={delayStyle(4)} />
+      </div>
 
-      <PacificBorder colorAbove={SECTION_COLORS[compareTone]} colorBelow={SECTION_COLORS[FOOTER_TONE]} />
+      <PacificBorder colorAbove={colors[compareTone]} colorBelow={colors[FOOTER_TONE]} />
 
-      <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(5)}>
-        <p className="text-sand/85">
-          SPI-12 and SPEI-12 are reported at the admin-1 (state/province) level by the World Bank; the figures
-          shown here are an unweighted average across each nation's own admin-1 regions (e.g. Fiji's four
-          divisions, Papua New Guinea's 22 provinces), not a separate national calculation. Each year's value is
-          December's reading, since a 12-month index already covers the full calendar year ending that month.
-        </p>
-        <p className="text-sand/85 mt-3">
-          Reported drought impact and water-storage capacity for these nations aren't wired up yet — the sources
-          listed above are where that indicator, once built, will be drawn from.
-        </p>
-        <p className="text-sand/85 mt-3">
-          This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
-        </p>
-      </CitationPanel>
+      <div id="sources">
+        <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(5)}>
+          <p className="text-sand/85">
+            SPI-12 and SPEI-12 are reported at the admin-1 (state/province) level by the World Bank; the figures
+            shown here are an unweighted average across each nation's own admin-1 regions (e.g. Fiji's four
+            divisions, Papua New Guinea's 22 provinces), not a separate national calculation. Each year's value is
+            December's reading, since a 12-month index already covers the full calendar year ending that month.
+          </p>
+          <p className="text-sand/85 mt-3">
+            Reported drought impact and water-storage capacity for these nations aren't wired up yet — the sources
+            listed above are where that indicator, once built, will be drawn from.
+          </p>
+          <p className="text-sand/85 mt-3">
+            This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
+          </p>
+        </CitationPanel>
+      </div>
     </>
   )
 }

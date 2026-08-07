@@ -9,14 +9,18 @@ import Section from '../components/Section.jsx'
 export default function NotFound() {
   return (
     <Section className="text-center">
-      <p className="mx-auto max-w-2xl text-sm font-semibold uppercase tracking-wide opacity-70">404</p>
+      {/* text-center repeated directly on the <p>s -- see the matching
+          comment in PageHero.jsx for why relying on the ancestor's
+          text-center alone isn't enough once index.css's global
+          `p { text-align: justify }` rule is in play. */}
+      <p className="mx-auto max-w-2xl text-center text-sm font-semibold uppercase tracking-wide opacity-70">404</p>
       <h1 className="mx-auto mt-3 max-w-2xl text-3xl font-bold tracking-tight">This page doesn't exist.</h1>
-      <p className="mx-auto mt-5 max-w-xl text-lg opacity-80">
+      <p className="mx-auto mt-5 max-w-xl text-center text-lg opacity-80">
         The link may be out of date, or the page may not have been built yet.
       </p>
       <Link
         to="/"
-        className="mt-6 inline-block rounded-full border border-ink/15 bg-white/60 px-5 py-2.5 text-sm font-medium shadow-sm transition-colors hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+        className="mt-6 inline-block rounded-full border border-ink/15 bg-surface/60 px-5 py-2.5 text-sm font-medium shadow-sm transition-colors hover:bg-surface/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
       >
         Back to the homepage
       </Link>

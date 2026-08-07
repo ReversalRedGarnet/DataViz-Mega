@@ -4,6 +4,7 @@ import { METRICS, TREND_METRIC } from '../utils/seaLevelMetrics.js'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderMetricChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { useTheme } from '../hooks/useTheme.jsx'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
 import EmptyState from './EmptyState.jsx'
@@ -23,6 +24,7 @@ import Tooltip from './Tooltip.jsx'
 //   style -- forwarded to the underlying Section
 export default function SeaLevelTrends({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
+  const { theme } = useTheme()
   const metric = METRICS[0]
   const ref = useRef(null)
 
@@ -53,8 +55,9 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
       showTooltip,
       hideTooltip,
       yTickFormat: d3.format('.2f'),
+      theme,
     })
-  }, [allRows, selectedNations, metric, showTooltip, hideTooltip])
+  }, [allRows, selectedNations, metric, showTooltip, hideTooltip, theme])
 
   if (!data) return <EmptyState tone="panel" style={style}>Sea level trend -- waiting on data.</EmptyState>
   if (!selectedNations || selectedNations.length === 0) {
@@ -74,7 +77,7 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
           stations' raw readings aren't shown side by side directly.
         </p>
         <SelectionLegend selected={selectedNations} />
-        <div className="mt-2 animate-pop-in rounded-xl border border-ink/10 bg-white/60 p-3">
+        <div className="mt-2 animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3">
           {allRows.length > 0 ? (
             <svg ref={ref} role="img" aria-label={metric.label} className="h-auto w-full" />
           ) : (
@@ -110,7 +113,7 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
 
         {trendNote && (
           <div
-            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-white/60 p-5"
+            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-surface/60 p-5"
             style={{ animationDelay: '120ms' }}
           >
             <h3 className="mb-3 text-sm font-semibold">Long-term trend</h3>

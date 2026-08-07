@@ -1,4 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useTheme } from '../hooks/useTheme.jsx'
+import { CHART_INK } from '../utils/theme.js'
 
 // The scroll-linked wave + canoe, rendered as a plain SVG rather than
 // its own fixed element -- it's meant to sit at the bottom of Header,
@@ -9,6 +11,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 //
 // Traveled distance is solid ocean blue; distance still ahead is faint
 // ink, the same "muted, not gone" treatment the chart gridlines use.
+// Ink specifically (not ocean) needed a dark-mode counterpart once
+// Header itself started going dark too -- a fixed dark ink stroke on a
+// now-dark header background would have gone invisible, the same
+// legibility problem chart axis text would have had (see
+// chartRenderers.jsx) -- so this reuses CHART_INK rather than staying
+// a fixed hex like OCEAN does.
 //
 // The canoe's horizontal position is a direct 1:1 readout of scroll
 // position -- not an independent animation -- so this doesn't need to
@@ -19,7 +27,6 @@ const BASELINE_Y = 12
 const CREST_Y = 4
 const BAR_HEIGHT = 44
 const CANOE_SCALE = 0.55
-const INK = '#24333A'
 const OCEAN = '#5B8FA3'
 
 // Hull: shallow crescent, a small hook at the stern (left) and a
@@ -49,6 +56,8 @@ export default function ScrollProgress() {
   const [width, setWidth] = useState(0)
   const [progress, setProgress] = useState(0) // 0..1
   const rafRef = useRef(null)
+  const { theme } = useTheme()
+  const ink = CHART_INK[theme] ?? CHART_INK.light
 
   // Measures the wrapper's own rendered width via ResizeObserver,
   // rather than window.innerWidth. innerWidth includes the vertical
@@ -96,8 +105,24 @@ export default function ScrollProgress() {
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     computeProgress()
+
+    // Content-height changes -- not just scrolling -- also change
+    // what "progress" means: scrollY stays the same the instant
+    // someone selects a second country to compare, but scrollHeight
+    // jumps as RippleChain/ComparisonView (or their drought/sea-level
+    // equivalents) swap from a one-line EmptyState to a full chart
+    // grid. Without also watching for that, the bar keeps showing the
+    // OLD, now-wrong fraction until the next real scroll event
+    // happens to fire -- e.g. reporting "almost done" right after a
+    // toggle just added a screen's worth of new content below. A
+    // ResizeObserver on <body> catches exactly that case; the scroll
+    // listener above still owns the common case of scrolling itself.
+    const bodyObserver = new ResizeObserver(handleScroll)
+    bodyObserver.observe(document.body)
+
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      bodyObserver.disconnect()
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, [])
@@ -130,7 +155,7 @@ export default function ScrollProgress() {
             <polyline
               points={waveStr}
               fill="none"
-              stroke={INK}
+              stroke={ink}
               strokeOpacity="0.18"
               strokeWidth="1.5"
               clipPath="url(#scroll-progress-ahead)"
@@ -145,11 +170,11 @@ export default function ScrollProgress() {
           </g>
 
           <g transform={`translate(${progressX},${canoeY}) scale(${CANOE_SCALE})`}>
-            <path d={HULL_PATH} fill={INK} />
+            <path d={HULL_PATH} fill={ink} />
             <g transform="translate(-1,-4) rotate(-32)">
-              <ellipse cx="0" cy="-21" rx="1.9" ry="3" fill={INK} />
-              <rect x="-1.1" y="-20" width="2.2" height="31" fill={INK} />
-              <path d={PADDLE_BLADE_PATH} fill={INK} />
+              <ellipse cx="0" cy="-21" rx="1.9" ry="3" fill={ink} />
+              <rect x="-1.1" y="-20" width="2.2" height="31" fill={ink} />
+              <path d={PADDLE_BLADE_PATH} fill={ink} />
             </g>
           </g>
         </svg>

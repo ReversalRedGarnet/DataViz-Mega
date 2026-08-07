@@ -4,6 +4,7 @@ import Section from './Section.jsx'
 import NoDataNote from './NoDataNote.jsx'
 import Tooltip from './Tooltip.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { useTheme } from '../hooks/useTheme.jsx'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderSnapshotChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { METRICS, REFERENCE_YEAR } from '../utils/droughtMetrics.js'
@@ -67,6 +68,7 @@ export default function DroughtSnapshot({ data, nations, style }) {
 function DroughtMetricSnapshot({ metric, rows, nations, showTooltip, hideTooltip, index }) {
   const { label, format } = metric
   const ref = useRef(null)
+  const { theme } = useTheme()
   const nationsMissing = nations.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
 
   useEffect(() => {
@@ -76,12 +78,12 @@ function DroughtMetricSnapshot({ metric, rows, nations, showTooltip, hideTooltip
     // (SI-prefix, tuned for the Cyclone metrics' much larger numbers)
     // would render 0.57 as "570m" here, so this passes a plain
     // fixed-decimal formatter instead. See chartRenderers.jsx.
-    renderSnapshotChart(svg, { rows, format, showTooltip, hideTooltip, yTickFormat: d3.format('.2f') })
-  }, [rows, format, showTooltip, hideTooltip])
+    renderSnapshotChart(svg, { rows, format, showTooltip, hideTooltip, yTickFormat: d3.format('.2f'), theme })
+  }, [rows, format, showTooltip, hideTooltip, theme])
 
   return (
     <div
-      className="animate-pop-in rounded-xl border border-ink/10 bg-white/60 p-3"
+      className="animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <h3 className="mb-1 text-sm font-medium">{label}</h3>

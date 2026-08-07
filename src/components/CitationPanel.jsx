@@ -11,6 +11,15 @@
 // on ink clears that easily at every opacity used below, and reads as
 // a clear, intentional close to the page instead of fading into it.
 //
+// bg-ink/text-sand is what makes that inversion work automatically in
+// dark mode too, without a dark: variant here: dark mode swaps which
+// raw colour ink/sand each resolve to (see index.css's :root/.dark
+// blocks), so this footer stays the one deliberately-inverted panel
+// relative to whatever the surrounding page currently is -- dark
+// panel on a light page in light mode, light panel on a dark page in
+// dark mode. Same "contrasts with the page, doesn't fade into it"
+// property either way.
+//
 // Props:
 //   sources -- array of { label, url }
 //   aboutTitle -- heading text for the disclaimer block, defaults to
@@ -28,7 +37,11 @@ const YEAR = new Date().getFullYear()
 
 export default function CitationPanel({ sources = [], aboutTitle = 'About this data', children, style }) {
   return (
-    <footer className="animate-pop-in px-6 py-12 md:py-16 bg-ink text-sand" style={style}>
+    // py-8/10, down from py-12/16 -- a deliberately modest trim (not a
+    // full redesign) per direct feedback that the footer felt taller
+    // than it needed to. space-y-6 (from space-y-8) tightens the same
+    // amount, proportionally, between the three blocks inside.
+    <footer className="animate-pop-in px-6 py-8 md:py-10 bg-ink text-sand" style={style}>
       {/* Headings styled as the site's "meta label" role (uppercase,
           tracked, text-sm) rather than the text-xl section-heading
           role used above the fold -- that's a deliberate size step
@@ -36,7 +49,7 @@ export default function CitationPanel({ sources = [], aboutTitle = 'About this d
           back to without an explicit size (which is what these
           rendered as before: 14px inherited from the wrapping div's
           text-sm, no weight distinction from body text). */}
-      <div className="max-w-5xl mx-auto text-sm space-y-8">
+      <div className="max-w-5xl mx-auto text-sm space-y-6">
         <div>
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide">Data sources</h2>
           {sources.length === 0 ? (

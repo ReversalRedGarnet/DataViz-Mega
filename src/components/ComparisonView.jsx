@@ -60,7 +60,7 @@ function pctChange(from, to) {
 function NationSummary({ nation, data, color, index, showTooltip, hideTooltip }) {
   return (
     <div
-      className="animate-pop-in rounded-2xl border-t-4 bg-white/80 p-6 shadow-sm"
+      className="animate-pop-in rounded-2xl border-t-4 bg-surface/80 p-6 shadow-sm"
       style={{ borderColor: color, animationDelay: `${index * 100}ms` }}
     >
       <h3 className="text-lg font-semibold">{nation}</h3>

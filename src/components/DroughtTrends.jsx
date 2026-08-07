@@ -4,6 +4,7 @@ import { METRICS, DROUGHT_THRESHOLD } from '../utils/droughtMetrics.js'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderMetricChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { useTheme } from '../hooks/useTheme.jsx'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
 import EmptyState from './EmptyState.jsx'
@@ -81,7 +82,7 @@ export default function DroughtTrends({ data, selectedNations, style }) {
 
         {droughtYearCounts && (
           <div
-            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-white/60 p-5"
+            className="animate-pop-in mt-8 rounded-xl border border-ink/10 bg-surface/60 p-5"
             style={{ animationDelay: '120ms' }}
           >
             <h3 className="mb-3 text-sm font-semibold">
@@ -109,6 +110,7 @@ export default function DroughtTrends({ data, selectedNations, style }) {
 function DroughtMetricChart({ metric, allRows, nations, showTooltip, hideTooltip, index }) {
   const { key, label, field: valueField, chartType, format } = metric
   const ref = useRef(null)
+  const { theme } = useTheme()
   const nationsMissing = nations.filter((n) => !allRows.some((d) => d.nation === n))
 
   useEffect(() => {
@@ -126,13 +128,14 @@ function DroughtMetricChart({ metric, allRows, nations, showTooltip, hideTooltip
       showTooltip,
       hideTooltip,
       yTickFormat: d3.format('.2f'),
+      theme,
     })
-  }, [allRows, nations, valueField, chartType, format, showTooltip, hideTooltip])
+  }, [allRows, nations, valueField, chartType, format, showTooltip, hideTooltip, theme])
 
   return (
     <div
       key={key}
-      className="animate-pop-in rounded-xl border border-ink/10 bg-white/60 p-3"
+      className="animate-pop-in rounded-xl border border-ink/10 bg-surface/60 p-3"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <h3 className="mb-1 text-sm font-medium">{label}</h3>

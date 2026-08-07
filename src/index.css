@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TYPE SCALE -- the small set of text roles reused across every
+   section, so a heading in BigPicture and a heading in MapView read
+   as the same design decision rather than two independent guesses.
+   New copy anywhere on the site should reach for one of these rather
+   than inventing a new size/weight/tracking combination:
+
+     Display (Hero's thesis only)   text-3xl md:text-5xl font-bold tracking-tight
+     Wordmark (Header only)         text-2xl md:text-4xl font-bold tracking-tight
+     Section heading (h2)           text-xl font-semibold
+     Card/sub-heading (h3/h4)       text-sm font-medium  (or font-semibold for a
+                                     card that itself groups other cards, e.g.
+                                     the "Regional Snapshot" / insights headers)
+     Eyebrow (section-level framing, e.g. Hero's kicker)
+                                     text-sm font-semibold uppercase tracking-wide opacity-70
+     Meta label (card-level metadata, e.g. a stat tile's label)
+                                     text-xs uppercase tracking-wide opacity-70
+     Body copy                      text-sm opacity-80
+     Helper / secondary text        text-sm opacity-70
+
+   Wordmark bumped up a step from its original text-lg md:text-xl --
+   the header is meant to read as a masthead, not a quiet corner
+   label, so it's sized to actually fill more of the header's own
+   vertical space instead of leaving most of that bar as padding
+   around small type. Header.jsx's own height-measurement effect
+   (ResizeObserver -> onHeightChange -> <main>'s padding-top) already
+   adapts to whatever height a bigger wordmark produces, so this
+   doesn't need a matching manual adjustment anywhere else. */
+
+@layer base {
+  /* Light/dark palette, as CSS variables rather than fixed hex --
+     see tailwind.config.js for why (ink/sand/panel/surface all
+     resolve through these, so a single flip here retheme the whole
+     site's borders/text/backgrounds, including every existing
+     ink/NN opacity usage, with no per-component dark: variants
+     needed). Values are RGB triplets (no `rgb()` wrapper, no commas)
+     -- that's the format Tailwind's `<alpha-value>` placeholder
+     expects so the /NN opacity modifiers keep working on top of a
+     variable.
+
+     Dark mode isn't a new, unrelated palette: it's built from the
+     same two hues already anchoring the light palette (ink and
+     sand), with their roles swapped -- dark-mode "sand" (the page
+     background) is a deeper version of ink, dark-mode "ink" (text)
+     is a warm off-white close to the original sand. Surface (the
+     "card floating on the page" token, replacing literal white) sits
+     a little lighter than the dark background, mirroring how white
+     cards sit a little lighter than the light background today. */
+  :root {
+    --color-ink: 36 51 58; /* #24333A */
+    --color-sand: 250 247 240; /* #FAF7F0 */
+    --color-panel: 241 234 220; /* #F1EADC */
+    --color-surface: 255 255 255; /* white */
+  }
+
+  .dark {
+    --color-ink: 240 236 227; /* warm off-white, close to light-mode sand */
+    --color-sand: 24 30 33; /* deep warm charcoal, close to light-mode ink but darker */
+    --color-panel: 34 42 46; /* a touch lighter than dark sand, same relationship panel has to sand in light mode */
+    --color-surface: 41 50 54; /* lighter than the dark background, so cards still read as "floating above" */
+  }
+
+  /* Both a fixed pixel value (so it's never 0 before Header.jsx's
+     first measurement effect runs) and a variable App.jsx keeps in
+     sync with the header's real measured height -- see
+     useHeaderHeight.js. Used by scroll-padding-top below so jumping
+     to an in-page section (SectionNav.jsx) or a `#hash` link lands
+     with the target's heading actually visible under the fixed
+     header, not hidden behind it. The +16px is breathing room so a
+     jumped-to heading isn't flush against the header's bottom edge. */
+  html {
+    --header-height: 96px;
+    scroll-padding-top: calc(var(--header-height) + 16px);
+  }
+
+  /* Smooth in-page jumps for SectionNav.jsx's links -- gated on
+     no-preference rather than applied unconditionally, since CSS
+     `scroll-behavior: smooth` is NOT automatically suppressed by
+     prefers-reduced-motion the way a JS-driven or `animation`-based
+     transition would be (see motion.js's own note on this same
+     gotcha for D3 transitions). */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* "Blocky" justified body copy, site-wide, per the person's own
+     preference -- scoped to <p> rather than every text element, since
+     that's where the site's actual prose lives (Hero/PageHero body
+     text, "at a glance" explainers, CitationPanel's disclaimer
+     paragraphs, etc.); short one-line labels and badges live in
+     <span>/<li>, not <p>, and justify has no visible effect on text
+     that never wraps anyway, so this can't accidentally misalign any
+     of those. The browser's own default behavior already left-aligns
+     a justified paragraph's final line, which is what keeps this
+     reading as "blocks with a clean edge," not fully justified
+     to a jagged last line. */
+  p {
+    text-align: justify;
+  }
+
+  body {
+    @apply bg-sand text-ink antialiased;
+    /* Belt-and-braces guard, not a fix in itself -- the actual overflow
+       source (ScrollProgress sizing itself off window.innerWidth,
+       which includes the scrollbar) is fixed at the component level.
+       This stays as a backstop so a future fixed/absolute element that
+       drifts a few pixels too wide can't reintroduce a sitewide
+       horizontal scrollbar; it should never be the thing actually
+       doing the clipping. */
+    overflow-x: hidden;
+    /* Theme swaps are instant everywhere else (colors are CSS
+       variables, so they update the moment .dark toggles), but an
+       un-eased instant flip specifically on the full-page background
+       + text color reads as a jarring flash. A short transition here
+       is the one deliberate exception to "colours don't animate" on
+       this site, scoped tightly to just this. */
+    transition: background-color 200ms ease-out, color 200ms ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body {
+      transition: none;
+    }
+  }
+
+  /* Site-wide custom cursor. !important is required, not just belt-
+     and-braces: the map markers used to set cursor via a D3 *inline*
+     style, and inline styles beat any external stylesheet rule
+     regardless of specificity short of !important. That inline rule
+     has been removed (see MapView.jsx), but !important stays as a
+     guarantee against anything else -- present or future -- reverting
+     to the OS pointer on hover, per the site's actual requirement. */
+  *,
+  *::before,
+  *::after {
+    cursor: url('/cursors/spear.svg') 2 2, auto !important;
+  }
+
+  /* Matching text-selection highlight, since the OS default blue would
+     be the one remaining unstyled system chrome on the page. */
+  ::selection {
+    background-color: #5b8fa3;
+    color: #faf7f0;
+  }
+
+  /* Visible keyboard focus ring for the SVG map markers, since browsers
+     don't consistently draw a default one on focusable SVG elements.
+     rgb(var(--color-ink)) rather than a fixed hex: these were raw CSS,
+     not Tailwind utilities, so they wouldn't otherwise have picked up
+     dark mode's swapped ink value -- a dark-on-dark focus ring would
+     have been invisible exactly when someone most needs to see it. */
+  .marker:focus-visible {
+    outline: 2px solid rgb(var(--color-ink));
+    outline-offset: 2px;
+  }
+
+  /* Consistent, branded focus ring for real <button> elements (zoom,
+     reset, clear selection) instead of relying on each browser's
+     inconsistent default outline. */
+  button:focus-visible {
+    outline: 2px solid rgb(var(--color-ink));
+    outline-offset: 2px;
+  }
+
+  /* Visible keyboard focus ring for inline "no data" notes (see
+     NoDataNote.jsx). These were previously plain outline-none with no
+     replacement -- meaning a keyboard user tabbing onto one got no
+     visible focus indicator at all, since a bare <span> has no other
+     native focus styling to fall back on. */
+  .data-note:focus-visible {
+    outline: 2px solid rgb(var(--color-ink));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+}
+
+@layer utilities {
+  /* The site's one signature entrance animation -- every section, card,
+     bullet, and popover uses this same "pop" (scale + rise + fade with
+     a slight overshoot) rather than each spot inventing its own
+     transition. A gentle back-out easing gives it a bit of bounce
+     without feeling cartoonish.
+     Re-triggers on every mount, which is what's wanted for the
+     empty-state <-> chart-content swaps in RippleChain/ComparisonView,
+     since React unmounts/remounts that subtree each time selection
+     changes -- picking a country visibly "pops" its content in. */
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  .animate-pop-in {
+    animation: pop-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Tooltip-specific pop: same overshoot feel, but the transform has
+     to also carry the anchor offset (tooltip is positioned by its
+     bottom-center point, via -50%/-100%) baked in, since an
+     `animation`'s own transform replaces rather than composes with a
+     separately-applied utility transform. */
+  @keyframes tooltip-pop-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -100%) scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -100%) scale(1);
+    }
+  }
+  .animate-tooltip-pop-in {
+    animation: tooltip-pop-in 220ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop-in,
+  .animate-tooltip-pop-in {
+    animation: none;
+  }
+}
