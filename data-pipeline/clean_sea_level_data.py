@@ -1,129 +1,155 @@
 """
-Convert the World Bank Pacific Observatory climate dataset into the
-annual drought JSON files used by the frontend.
+Convert BOM Pacific Sea Level Monitoring Project HTML exports into the
+annual sea level JSON files used by the frontend.
 
-Unlike clean_data.py, this script processes a single regional climate
-dataset covering 1958-2021 and outputs annual SPI-12 and SPEI-12
-timeseries.
+Each station's raw mean is relative to its own local benchmark, not a
+shared datum, so this outputs each year as an anomaly relative to that
+station's own long-term average, plus a separate per-station trend in
+mm/year -- both are safe to compare across stations; raw metres are not.
 
 Usage:
-    python clean_drought_data.py
+    python clean_sea_level_data.py
 
-Place the source CSV (pic_adm1_climate_indices_10-11-2022.csv) in
-data-pipeline/raw/. Cleaned JSON files are written to
-../public/data/.
+Place one Monthly_sea_levels_for_<STATION>.html per station in
+data-pipeline/raw/. Cleaned JSON files are written to ../public/data/.
 """
 
 import json
+import re
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 
 RAW_DIR = Path(__file__).parent / "raw"
 OUT_DIR = Path(__file__).parent.parent / "public" / "data"
 
-RAW_CSV = "pic_adm1_climate_indices_10-11-2022.csv"
+# File-name suffix -> nation name as SeaLevelRisePage.jsx spells it.
+STATIONS = {
+    "COOK_ISLANDS": "Cook Islands",
+    "FIJI": "Fiji",
+    "KIRIBATI": "Kiribati",
+    "MARSHALL_ISLANDS": "Marshall Islands",
+    "TONGA": "Tonga",
+    "TUVALU": "Tuvalu",
+}
 
-# Nations included in the drought visualisation.
-NATIONS = [
+# Output row order, matching SeaLevelRisePage.jsx.
+NATION_ORDER = [
+    "Tuvalu",
     "Kiribati",
-    "Papua New Guinea",
     "Marshall Islands",
-    "Federated States of Micronesia",
+    "Tonga",
     "Fiji",
+    "Cook Islands",
 ]
 
-# Full period available from the source dataset.
-YEAR_MIN = 1958
-YEAR_MAX = 2021
+MIN_GOOD_FRACTION = 0.5  # a month needs at least half its readings to count
+MIN_MONTHS_PER_YEAR = 9  # a year needs at least 9 of 12 months to count
+MIN_YEARS_FOR_TREND = 15  # minimum years before a trend is reported at all
 
-# Source column -> output configuration.
-INDICATORS = {
-    "spi12_median": {
-        "json_name": "spi12.json",
-        "field_name": "spi12",
-        "label": "SPI-12",
-    },
-    "spei12_median": {
-        "json_name": "spei12.json",
-        "field_name": "spei12",
-        "label": "SPEI-12",
-    },
-}
+ROW_RE = re.compile(
+    r'<tr align="center">\s*'
+    r"<td>(\d+)</td>\s*<td>(\d+)</td>\s*<td>\s*(\d+)</td>\s*<td>\s*(\d+)</td>\s*"
+    r"<td>([-\d.]+)</td>\s*<td>([-\d.]+)</td>\s*<td>([-\d.]+)</td>\s*<td>([-\d.]+)</td>\s*</tr>",
+    re.S,
+)
+
+
+def parse_station(html_path: Path) -> pd.DataFrame:
+    """Parse monthly rows out of one station's HTML export."""
+
+    html = html_path.read_text(encoding="utf-8", errors="replace")
+    matches = ROW_RE.findall(html)
+
+    if not matches:
+        raise ValueError(f"No monthly rows matched in {html_path.name}.")
+
+    df = pd.DataFrame(
+        matches,
+        columns=["month", "year", "gaps", "good", "minimum", "maximum", "mean", "stdevn"],
+    )
+
+    for col in df.columns:
+        df[col] = pd.to_numeric(df[col])
+
+    return df
+
+
+def annual_series(monthly: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate monthly readings into a quality-filtered annual mean."""
+
+    good_fraction = monthly["good"] / (monthly["good"] + monthly["gaps"])
+    reliable = monthly[good_fraction >= MIN_GOOD_FRACTION]
+
+    by_year = reliable.groupby("year").agg(
+        mean_sea_level_m=("mean", "mean"), months=("mean", "count")
+    )
+
+    return by_year[by_year["months"] >= MIN_MONTHS_PER_YEAR].copy()
+
+
+def linear_trend_mm_per_year(annual: pd.DataFrame) -> Optional[float]:
+    """Fit an OLS trend line through annual means, in mm/year."""
+
+    if len(annual) < MIN_YEARS_FOR_TREND:
+        return None
+
+    years = annual.index.to_numpy(dtype=float)
+    values_m = annual["mean_sea_level_m"].to_numpy(dtype=float)
+
+    x_mean, y_mean = years.mean(), values_m.mean()
+    slope_m_per_year = ((years - x_mean) * (values_m - y_mean)).sum() / ((years - x_mean) ** 2).sum()
+
+    return slope_m_per_year * 1000
 
 
 def clean() -> None:
-    """Generate annual SPI-12 and SPEI-12 datasets."""
+    """Generate annual sea level anomaly and trend datasets."""
 
-    path = RAW_DIR / RAW_CSV
+    anomaly_rows = []
+    trend_rows = []
 
-    if not path.exists():
-        print(f"Skipping -- {RAW_CSV} not found in {RAW_DIR}.")
-        return
+    for suffix, nation in STATIONS.items():
+        html_path = RAW_DIR / f"Monthly_sea_levels_for_{suffix}.html"
 
-    # Ignore mixed-type warnings from unused columns.
-    df = pd.read_csv(path, low_memory=False)
+        if not html_path.exists():
+            print(f"Skipping {nation} -- {html_path.name} not found in {RAW_DIR}.")
+            continue
 
-    print(
-        f"{RAW_CSV}: {len(df)} rows, "
-        f"columns include {list(df.columns[:8])}..."
-    )
+        monthly = parse_station(html_path)
+        annual = annual_series(monthly)
+        baseline = annual["mean_sea_level_m"].mean()
+        trend = linear_trend_mm_per_year(annual)
 
-    df = df[df["ADM0_NAME"].notna()].copy()
+        print(
+            f"{nation}: {len(monthly)} monthly readings, {len(annual)} complete years "
+            f"({annual.index.min()}-{annual.index.max()}), baseline {baseline:.3f}m, "
+            f"trend {f'{trend:+.2f} mm/yr' if trend is not None else 'not enough years'}"
+        )
 
-    df["year"] = pd.to_numeric(df["year"], errors="coerce")
-    df["month"] = pd.to_numeric(df["month"], errors="coerce")
+        for year, row in annual.iterrows():
+            anomaly_rows.append({
+                "nation": nation,
+                "year": int(year),
+                "sea_level_anomaly_m": round(float(row["mean_sea_level_m"] - baseline), 4),
+            })
 
-    df = df[df["year"].notna() & df["month"].notna()]
+        if trend is not None:
+            trend_rows.append({"nation": nation, "trend_mm_per_year": round(trend, 2)})
 
-    df["year"] = df["year"].astype(int)
-    df["month"] = df["month"].astype(int)
-
-    # Use December values to represent each calendar year.
-    december = df[df["month"] == 12]
+    anomaly_rows.sort(key=lambda r: (NATION_ORDER.index(r["nation"]), r["year"]))
+    trend_rows.sort(key=lambda r: NATION_ORDER.index(r["nation"]))
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    for source_col, config in INDICATORS.items():
-        rows = []
+    with open(OUT_DIR / "sea_level_anomaly.json", "w") as f:
+        json.dump(anomaly_rows, f, indent=2)
+    print(f"\nwrote sea_level_anomaly.json ({len(anomaly_rows)} rows total)")
 
-        for nation in NATIONS:
-            sub = december[
-                (december["ADM0_NAME"] == nation)
-                & december[source_col].notna()
-            ]
-
-            sub = sub[sub["year"].between(YEAR_MIN, YEAR_MAX)]
-
-            regions = sorted(sub["ADM1_NAME"].dropna().unique())
-
-            # Average across the country's admin-1 regions.
-            by_year = sub.groupby("year")[source_col].mean()
-
-            print(
-                f"  {config['label']} / {nation}: "
-                f"{len(regions)} admin-1 regions, "
-                f"{len(by_year)} years "
-                f"{by_year.index.min() if len(by_year) else '-'}"
-                f"-{by_year.index.max() if len(by_year) else '-'}"
-            )
-
-            for year, value in by_year.items():
-                rows.append({
-                    "nation": nation,
-                    "year": int(year),
-                    config["field_name"]: round(float(value), 4),
-                })
-
-        rows.sort(key=lambda r: (NATIONS.index(r["nation"]), r["year"]))
-
-        with open(OUT_DIR / config["json_name"], "w") as f:
-            json.dump(rows, f, indent=2)
-
-        print(
-            f"  wrote {config['json_name']} "
-            f"({len(rows)} rows total)\n"
-        )
+    with open(OUT_DIR / "sea_level_trend.json", "w") as f:
+        json.dump(trend_rows, f, indent=2)
+    print(f"wrote sea_level_trend.json ({len(trend_rows)} rows total)")
 
 
 if __name__ == "__main__":

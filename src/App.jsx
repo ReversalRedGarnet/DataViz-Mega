@@ -69,7 +69,7 @@ const HAZARD_PAGES = {
 function HazardRoute({ slug }) {
   const PageComponent = HAZARD_PAGES[slug]
 
-  if (!PageComponent) return null
+  if (!PageComponent) return <NotFound />
 
   return <PageComponent />
 }
