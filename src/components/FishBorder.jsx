@@ -1,21 +1,19 @@
 import { PEWTER } from '../utils/theme.js'
 
-// Interlocking geometric fish motif -- an original design based on the
-// person's own hand-drawn sketch (a diamond body, cross-hatch fin
-// lines, an eye), not a reproduction of a specific traditional
-// pattern. Used only at the two boundaries that matter most -- Hero
-// (the page's "header") into the first body section, and the last
-// body section into CitationPanel (the "footer") -- everywhere else on
-// the page keeps using the wave/spiral PacificBorder instead. Giving
-// this motif only those two spots, rather than every section split,
-// is what lets it read as "here's where the content starts / ends"
-// instead of competing with the wave for the same job.
+// Interlocking geometric fish motif -- an original design (a diamond
+// body, cross-hatch fin lines, an eye), not a reproduction of a
+// specific traditional pattern.
 //
-// Body fill is deliberately `none`, not a fixed colour: this divider
-// sits across a colour transition (colorAbove above the seam,
-// colorBelow below it), so a fish half-above/half-below the seam needs
-// to show whatever's actually behind it rather than a fill colour that
-// would mismatch one side or the other.
+// Not currently used by any page -- PacificBorder's wave/spiral is the
+// only divider actually wired in today. Kept as a ready alternative
+// for a boundary that wants a distinct "here's where the content
+// starts/ends" marker instead of the wave (see the module docstring
+// intent this was originally built for), rather than deleted outright.
+//
+// Body fill is deliberately `none`, not a fixed color: this divider
+// sits across a color transition (colorAbove/colorBelow), so a fish
+// half-above/half-below the seam needs to show whatever's actually
+// behind it.
 const TILE_WIDTH = 22
 const BODY_LEN = 22
 const BODY_H = 9

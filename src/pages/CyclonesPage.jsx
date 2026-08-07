@@ -11,12 +11,9 @@ import { useRippleData } from '../hooks/useRippleData.js'
 import { useTheme } from '../hooks/useTheme.jsx'
 import { sectionColorsFor } from '../utils/theme.js'
 
-// The original Ripple site, unchanged in substance -- this is the
-// exact content that used to live directly in App.jsx before the site
-// grew a homepage and sibling hazard pages. Moving it here rather than
-// rewriting it means every design decision documented below (the tone
-// rhythm, the stagger delays, the live-region wording) is inherited
-// as-is rather than re-derived.
+// The original Ripple site, unchanged in substance -- this is the same
+// content that used to live directly in App.jsx before the site grew
+// a homepage and sibling hazard pages.
 const DATA_SOURCES = [
   {
     label: 'Number of directly affected persons attributed to disasters — Pacific Data Hub (SPC)',
@@ -51,16 +48,12 @@ const DATA_SOURCES = [
   },
 ]
 
-// Tone for each major section, top to bottom -- the single source of
-// truth for both which background each Section uses AND which two
-// colours each PacificBorder divider needs to bound (see
-// SECTION_COLORS in theme.js and the two-tone divider in
-// PacificBorder.jsx). 'plain' sections are the interactive canvas
-// (Hero/Storm profile/Map/RippleChain); 'panel' is reserved for the
-// two sections that read as an editorial aside (BigPicture, Compare
-// recovery) -- Storm profile stays 'plain' rather than becoming a
-// third panel, since it's part of the same opening/framing beat as
-// Hero, not a separate editorial aside.
+// Tone for each major section, top to bottom -- the source of truth
+// for both which background each Section uses and which two colors
+// each PacificBorder divider bounds (see sectionColorsFor in
+// theme.js). 'plain' sections are the interactive canvas (Hero/Storm
+// profile/Map/RippleChain); 'panel' is reserved for the two sections
+// that read as an editorial aside (BigPicture, Compare recovery).
 const SECTION_TONES = ['plain', 'plain', 'panel', 'plain', 'plain', 'panel']
 const FOOTER_TONE = 'ink'
 
@@ -78,19 +71,14 @@ export default function CyclonesPage() {
   const data = useRippleData()
   const { selected, toggle, clear } = useSelection()
   const { theme } = useTheme()
-  // Read once per render rather than inline at each PacificBorder call
-  // -- see theme.js: this must stay a plain object lookup (not a
-  // hook), since it just resolves which hex map to read from based on
-  // the theme value useTheme() already gave us.
   const colors = sectionColorsFor(theme)
 
   const [heroTone, stormTone, bigPictureTone, mapTone, rippleTone, comparisonTone] = SECTION_TONES
 
   return (
     <>
-      {/* Announces selection changes to screen readers, since the charts
-          and comparison view updating below wouldn't otherwise be
-          noticed without visually looking at the page. */}
+      {/* Announces selection changes to screen readers, since the
+          charts/comparison view below otherwise update silently. */}
       <div aria-live="polite" className="sr-only">
         {selectionAnnouncement(selected)}
       </div>
