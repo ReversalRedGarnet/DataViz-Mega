@@ -1,17 +1,10 @@
-// A smooth curling wave-and-spiral motif -- an original design (not a
-// reproduction of any specific traditional Pacific textile or art
-// pattern; those belong to specific communities and shouldn't be
-// lifted generically), built from the person's own hand-drawn sketch:
-// waves that are also spirals, breaking at the crest. Replaces the
-// earlier straight zigzag with an actual smooth curve plus a small
-// hand-parametrised curl at each crest.
+// Curling wave-and-spiral divider motif -- an original design, not a
+// reproduction of any traditional Pacific textile/art pattern.
 //
-// Still a genuine two-tone divider between sections, exactly as
-// before: `colorAbove` fills the whole strip, then `colorBelow` is
-// painted over just the region below the wave line -- so the wave
-// itself is the seam between one section's background and the next's,
-// rather than a separate border element that would need to line up
-// pixel-perfectly with a flat colour cut.
+// Two-tone divider: `colorAbove` fills the whole strip, then
+// `colorBelow` paints just the region below the wave line, so the
+// wave itself is the seam between sections rather than a border that
+// has to line up with a flat color cut.
 const TILE_WIDTH = 40
 const TILE_COUNT = 10 // 40 * 10 = 400, matching the original total width
 const BASELINE_Y = 16
@@ -20,12 +13,10 @@ const VIEW_WIDTH = TILE_WIDTH * TILE_COUNT
 const VIEW_HEIGHT = 20
 const WAVE_STROKE = '#5B8FA3' // same ocean blue as the map markers and storm-profile points
 
-// The wave line itself as a sequence of cubic-bezier "swells" -- a
-// smooth curve rather than the old sharp zigzag, so it reads as water
-// rising and falling instead of a saw-tooth. Returns just the C
-// commands (no leading M), since both the visible stroke and the fill
-// region below it need to start from the same point but are used
-// slightly differently (see WAVE_LINE_PATH / BOTTOM_REGION_PATH).
+// The wave line as a sequence of cubic-bezier swells. Returns just the
+// C commands (no leading M) since the stroke and the fill region below
+// it share a start point but are used differently -- see
+// WAVE_LINE_PATH / BOTTOM_REGION_PATH.
 function buildWaveCommands() {
   let d = ''
   for (let i = 0; i < TILE_COUNT; i++) {
@@ -40,14 +31,10 @@ function buildWaveCommands() {
   return d
 }
 
-// A small curl sitting right at each wave crest -- the "waves that are
-// also spirals, breaking" detail from the original sketch. A genuine
-// hand-parametrised spiral (radius growing with angle from the crest
-// point outward), not a fixed decorative shape, so one function draws
-// all ten identically. Radius and turn count were tuned by actually
-// rendering this to an image and checking it stayed within the
-// viewBox -- an earlier draft's curl poked out above y=0, which would
-// have bled into the section above it.
+// Small curl at each wave crest -- radius grows with angle from the
+// crest point outward. Turn count/radius tuned by rendering and
+// checking the curl stays inside the viewBox (an earlier draft poked
+// out above y=0 and bled into the section above).
 function buildCurlPath(cx, cy) {
   const turns = 1.15
   const rMax = 3.2
@@ -72,9 +59,8 @@ const CURL_PATHS = Array.from({ length: TILE_COUNT }, (_, i) =>
 
 // Props:
 //   colorAbove / colorBelow -- real hex values (see theme.js
-//     SECTION_COLORS) matching whatever the sections immediately above
-//     and below this divider are using, so colour never has a visible
-//     seam anywhere except along the wave itself.
+//     sectionColorsFor) matching the sections immediately above/below,
+//     so there's no visible seam except along the wave itself.
 export default function PacificBorder({ colorAbove = '#FAF7F0', colorBelow = '#FAF7F0' }) {
   return (
     <svg

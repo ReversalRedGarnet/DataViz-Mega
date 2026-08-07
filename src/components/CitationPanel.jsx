@@ -1,54 +1,27 @@
-// Site footer: data sources (required by the competition rules and
-// likely checked by the judging panel's dataviz engineer), plus
-// copyright and a plain-language data disclaimer. One <footer>, not
-// two, so screen readers see a single "contentinfo" landmark rather
-// than two competing ones.
+// Site footer: data sources, plus copyright and a plain-language data
+// disclaimer. One <footer>, not two, so screen readers see a single
+// "contentinfo" landmark.
 //
-// Dark background is a deliberate contrast choice, not just decoration:
-// the previous version leaned on low text opacity (60-70%) over the
-// same light page background as everything else, which is a common way
-// small print quietly drops below WCAG's contrast minimum. Light text
-// on ink clears that easily at every opacity used below, and reads as
-// a clear, intentional close to the page instead of fading into it.
-//
-// bg-ink/text-sand is what makes that inversion work automatically in
-// dark mode too, without a dark: variant here: dark mode swaps which
-// raw colour ink/sand each resolve to (see index.css's :root/.dark
-// blocks), so this footer stays the one deliberately-inverted panel
-// relative to whatever the surrounding page currently is -- dark
-// panel on a light page in light mode, light panel on a dark page in
-// dark mode. Same "contrasts with the page, doesn't fade into it"
-// property either way.
+// bg-ink/text-sand rather than a lighter panel with low-opacity text
+// (a common way small print quietly drops below WCAG's contrast
+// minimum): reads as a clear, intentional close to the page. Also
+// what makes this flip automatically in dark mode without a dark:
+// variant -- ink/sand swap which raw color they resolve to (see
+// index.css's :root/.dark blocks), so the footer stays the one panel
+// that contrasts with whatever the surrounding page currently is.
 //
 // Props:
 //   sources -- array of { label, url }
-//   aboutTitle -- heading text for the disclaimer block, defaults to
-//     "About this data". Only worth overriding if a page's disclaimer
-//     genuinely isn't about "data" in the same sense (unlikely).
-//   children -- optional; replaces the default Harold-specific
-//     disclaimer paragraphs below with whatever a given page passes
-//     in, so a hazard whose dataset has different gaps/caveats can
-//     say so accurately instead of inheriting cyclone-specific
-//     wording that wouldn't be true for it. Cyclones itself passes no
-//     children, so it keeps exactly the paragraphs it always had.
-//   style -- forwarded onto the <footer>, used by each page to
-//     stagger its own sections' entrance on first load
+//   aboutTitle -- heading for the disclaimer block, default "About this data"
+//   children -- optional; replaces the default Cyclone-specific
+//     disclaimer paragraphs so a page with different data gaps/caveats
+//     can say so accurately. Cyclones passes no children.
+//   style -- forwarded onto the <footer>
 const YEAR = new Date().getFullYear()
 
 export default function CitationPanel({ sources = [], aboutTitle = 'About this data', children, style }) {
   return (
-    // py-8/10, down from py-12/16 -- a deliberately modest trim (not a
-    // full redesign) per direct feedback that the footer felt taller
-    // than it needed to. space-y-6 (from space-y-8) tightens the same
-    // amount, proportionally, between the three blocks inside.
     <footer className="animate-pop-in px-6 py-8 md:py-10 bg-ink text-sand" style={style}>
-      {/* Headings styled as the site's "meta label" role (uppercase,
-          tracked, text-sm) rather than the text-xl section-heading
-          role used above the fold -- that's a deliberate size step
-          down for a footer, not the unstyled default an <h2> falls
-          back to without an explicit size (which is what these
-          rendered as before: 14px inherited from the wrapping div's
-          text-sm, no weight distinction from body text). */}
       <div className="max-w-5xl mx-auto text-sm space-y-6">
         <div>
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide">Data sources</h2>
