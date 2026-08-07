@@ -1,0 +1,962 @@
+[
+  {
+    "nation": "Tuvalu",
+    "year": 1994,
+    "sea_level_anomaly_m": -0.0286
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 1995,
+    "sea_level_anomaly_m": -0.019
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 1996,
+    "sea_level_anomaly_m": -0.0216
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 1997,
+    "sea_level_anomaly_m": -0.0739
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 1998,
+    "sea_level_anomaly_m": -0.2587
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 1999,
+    "sea_level_anomaly_m": -0.0306
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2000,
+    "sea_level_anomaly_m": -0.008
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2001,
+    "sea_level_anomaly_m": -0.024
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2002,
+    "sea_level_anomaly_m": 0.0108
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2003,
+    "sea_level_anomaly_m": -0.0136
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2004,
+    "sea_level_anomaly_m": -0.0064
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2005,
+    "sea_level_anomaly_m": -0.0162
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2006,
+    "sea_level_anomaly_m": -0.011
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2007,
+    "sea_level_anomaly_m": 0.0124
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2008,
+    "sea_level_anomaly_m": -0.003
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2009,
+    "sea_level_anomaly_m": -0.0154
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2010,
+    "sea_level_anomaly_m": -0.0476
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2011,
+    "sea_level_anomaly_m": 0.0056
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2012,
+    "sea_level_anomaly_m": 0.0034
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2013,
+    "sea_level_anomaly_m": 0.0131
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2014,
+    "sea_level_anomaly_m": 0.0364
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2015,
+    "sea_level_anomaly_m": 0.026
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2016,
+    "sea_level_anomaly_m": -0.0416
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2017,
+    "sea_level_anomaly_m": 0.0295
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2018,
+    "sea_level_anomaly_m": 0.0895
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2019,
+    "sea_level_anomaly_m": 0.0634
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2020,
+    "sea_level_anomaly_m": 0.0822
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2021,
+    "sea_level_anomaly_m": 0.0661
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2022,
+    "sea_level_anomaly_m": 0.0697
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2023,
+    "sea_level_anomaly_m": 0.0418
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2024,
+    "sea_level_anomaly_m": 0.0187
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2025,
+    "sea_level_anomaly_m": 0.0503
+  },
+  {
+    "nation": "Kiribati",
+    "year": 1994,
+    "sea_level_anomaly_m": 0.0108
+  },
+  {
+    "nation": "Kiribati",
+    "year": 1995,
+    "sea_level_anomaly_m": -0.0717
+  },
+  {
+    "nation": "Kiribati",
+    "year": 1996,
+    "sea_level_anomaly_m": -0.0445
+  },
+  {
+    "nation": "Kiribati",
+    "year": 1997,
+    "sea_level_anomaly_m": -0.0025
+  },
+  {
+    "nation": "Kiribati",
+    "year": 1998,
+    "sea_level_anomaly_m": -0.2008
+  },
+  {
+    "nation": "Kiribati",
+    "year": 1999,
+    "sea_level_anomaly_m": -0.0833
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2000,
+    "sea_level_anomaly_m": -0.0413
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2001,
+    "sea_level_anomaly_m": -0.0005
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2002,
+    "sea_level_anomaly_m": 0.0398
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2003,
+    "sea_level_anomaly_m": -0.0254
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2004,
+    "sea_level_anomaly_m": 0.0413
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2005,
+    "sea_level_anomaly_m": -0.0117
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2006,
+    "sea_level_anomaly_m": 0.0188
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2007,
+    "sea_level_anomaly_m": -0.0397
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2008,
+    "sea_level_anomaly_m": -0.0603
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2009,
+    "sea_level_anomaly_m": 0.0372
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2010,
+    "sea_level_anomaly_m": -0.066
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2011,
+    "sea_level_anomaly_m": -0.0006
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2012,
+    "sea_level_anomaly_m": 0.0272
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2013,
+    "sea_level_anomaly_m": 0.0055
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2014,
+    "sea_level_anomaly_m": 0.0749
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2015,
+    "sea_level_anomaly_m": 0.0821
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2016,
+    "sea_level_anomaly_m": -0.0493
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2017,
+    "sea_level_anomaly_m": 0.0119
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2018,
+    "sea_level_anomaly_m": 0.0868
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2019,
+    "sea_level_anomaly_m": 0.0914
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2020,
+    "sea_level_anomaly_m": 0.0095
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2021,
+    "sea_level_anomaly_m": 0.0194
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2022,
+    "sea_level_anomaly_m": 0.0349
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2023,
+    "sea_level_anomaly_m": 0.0916
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2024,
+    "sea_level_anomaly_m": -0.0071
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2025,
+    "sea_level_anomaly_m": 0.0218
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 1994,
+    "sea_level_anomaly_m": -0.0919
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 1995,
+    "sea_level_anomaly_m": -0.0523
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 1996,
+    "sea_level_anomaly_m": -0.0155
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 1997,
+    "sea_level_anomaly_m": -0.1601
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 1998,
+    "sea_level_anomaly_m": -0.0248
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 1999,
+    "sea_level_anomaly_m": -0.0457
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2000,
+    "sea_level_anomaly_m": 0.001
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2001,
+    "sea_level_anomaly_m": -0.0125
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2002,
+    "sea_level_anomaly_m": -0.0732
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2003,
+    "sea_level_anomaly_m": -0.0151
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2004,
+    "sea_level_anomaly_m": -0.0064
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2005,
+    "sea_level_anomaly_m": -0.0232
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2006,
+    "sea_level_anomaly_m": -0.044
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2007,
+    "sea_level_anomaly_m": 0.0475
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2008,
+    "sea_level_anomaly_m": 0.0045
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2009,
+    "sea_level_anomaly_m": -0.0239
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2010,
+    "sea_level_anomaly_m": 0.0233
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2011,
+    "sea_level_anomaly_m": 0.0615
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2012,
+    "sea_level_anomaly_m": 0.0659
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2013,
+    "sea_level_anomaly_m": 0.0185
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2014,
+    "sea_level_anomaly_m": -0.0064
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2015,
+    "sea_level_anomaly_m": -0.1025
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2016,
+    "sea_level_anomaly_m": 0.0761
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2017,
+    "sea_level_anomaly_m": 0.0655
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2018,
+    "sea_level_anomaly_m": 0.0492
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2019,
+    "sea_level_anomaly_m": 0.073
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2020,
+    "sea_level_anomaly_m": 0.0527
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2021,
+    "sea_level_anomaly_m": 0.0689
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2024,
+    "sea_level_anomaly_m": 0.0232
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2025,
+    "sea_level_anomaly_m": 0.0669
+  },
+  {
+    "nation": "Tonga",
+    "year": 1993,
+    "sea_level_anomaly_m": -0.1422
+  },
+  {
+    "nation": "Tonga",
+    "year": 1994,
+    "sea_level_anomaly_m": -0.1501
+  },
+  {
+    "nation": "Tonga",
+    "year": 1995,
+    "sea_level_anomaly_m": -0.1473
+  },
+  {
+    "nation": "Tonga",
+    "year": 1996,
+    "sea_level_anomaly_m": -0.1002
+  },
+  {
+    "nation": "Tonga",
+    "year": 1997,
+    "sea_level_anomaly_m": -0.0311
+  },
+  {
+    "nation": "Tonga",
+    "year": 1998,
+    "sea_level_anomaly_m": -0.0552
+  },
+  {
+    "nation": "Tonga",
+    "year": 1999,
+    "sea_level_anomaly_m": -0.0715
+  },
+  {
+    "nation": "Tonga",
+    "year": 2000,
+    "sea_level_anomaly_m": 0.0066
+  },
+  {
+    "nation": "Tonga",
+    "year": 2001,
+    "sea_level_anomaly_m": -0.0449
+  },
+  {
+    "nation": "Tonga",
+    "year": 2002,
+    "sea_level_anomaly_m": 0.0011
+  },
+  {
+    "nation": "Tonga",
+    "year": 2003,
+    "sea_level_anomaly_m": -0.0846
+  },
+  {
+    "nation": "Tonga",
+    "year": 2004,
+    "sea_level_anomaly_m": -0.0556
+  },
+  {
+    "nation": "Tonga",
+    "year": 2005,
+    "sea_level_anomaly_m": -0.0702
+  },
+  {
+    "nation": "Tonga",
+    "year": 2006,
+    "sea_level_anomaly_m": -0.0223
+  },
+  {
+    "nation": "Tonga",
+    "year": 2007,
+    "sea_level_anomaly_m": 0.0173
+  },
+  {
+    "nation": "Tonga",
+    "year": 2008,
+    "sea_level_anomaly_m": 0.0361
+  },
+  {
+    "nation": "Tonga",
+    "year": 2009,
+    "sea_level_anomaly_m": 0.0332
+  },
+  {
+    "nation": "Tonga",
+    "year": 2010,
+    "sea_level_anomaly_m": -0.0184
+  },
+  {
+    "nation": "Tonga",
+    "year": 2011,
+    "sea_level_anomaly_m": 0.031
+  },
+  {
+    "nation": "Tonga",
+    "year": 2012,
+    "sea_level_anomaly_m": 0.0763
+  },
+  {
+    "nation": "Tonga",
+    "year": 2013,
+    "sea_level_anomaly_m": 0.0314
+  },
+  {
+    "nation": "Tonga",
+    "year": 2014,
+    "sea_level_anomaly_m": 0.0257
+  },
+  {
+    "nation": "Tonga",
+    "year": 2015,
+    "sea_level_anomaly_m": -0.0309
+  },
+  {
+    "nation": "Tonga",
+    "year": 2016,
+    "sea_level_anomaly_m": 0.0191
+  },
+  {
+    "nation": "Tonga",
+    "year": 2017,
+    "sea_level_anomaly_m": 0.018
+  },
+  {
+    "nation": "Tonga",
+    "year": 2018,
+    "sea_level_anomaly_m": 0.0584
+  },
+  {
+    "nation": "Tonga",
+    "year": 2019,
+    "sea_level_anomaly_m": 0.0712
+  },
+  {
+    "nation": "Tonga",
+    "year": 2020,
+    "sea_level_anomaly_m": 0.0952
+  },
+  {
+    "nation": "Tonga",
+    "year": 2021,
+    "sea_level_anomaly_m": 0.0813
+  },
+  {
+    "nation": "Tonga",
+    "year": 2022,
+    "sea_level_anomaly_m": 0.1402
+  },
+  {
+    "nation": "Tonga",
+    "year": 2023,
+    "sea_level_anomaly_m": 0.1162
+  },
+  {
+    "nation": "Tonga",
+    "year": 2024,
+    "sea_level_anomaly_m": 0.1083
+  },
+  {
+    "nation": "Tonga",
+    "year": 2025,
+    "sea_level_anomaly_m": 0.0579
+  },
+  {
+    "nation": "Fiji",
+    "year": 1993,
+    "sea_level_anomaly_m": -0.0812
+  },
+  {
+    "nation": "Fiji",
+    "year": 1994,
+    "sea_level_anomaly_m": -0.0681
+  },
+  {
+    "nation": "Fiji",
+    "year": 1995,
+    "sea_level_anomaly_m": -0.0644
+  },
+  {
+    "nation": "Fiji",
+    "year": 1996,
+    "sea_level_anomaly_m": -0.0189
+  },
+  {
+    "nation": "Fiji",
+    "year": 1997,
+    "sea_level_anomaly_m": -0.0073
+  },
+  {
+    "nation": "Fiji",
+    "year": 1998,
+    "sea_level_anomaly_m": -0.1079
+  },
+  {
+    "nation": "Fiji",
+    "year": 1999,
+    "sea_level_anomaly_m": -0.0688
+  },
+  {
+    "nation": "Fiji",
+    "year": 2000,
+    "sea_level_anomaly_m": 0.0159
+  },
+  {
+    "nation": "Fiji",
+    "year": 2001,
+    "sea_level_anomaly_m": -0.005
+  },
+  {
+    "nation": "Fiji",
+    "year": 2002,
+    "sea_level_anomaly_m": -0.007
+  },
+  {
+    "nation": "Fiji",
+    "year": 2003,
+    "sea_level_anomaly_m": -0.0681
+  },
+  {
+    "nation": "Fiji",
+    "year": 2004,
+    "sea_level_anomaly_m": -0.0355
+  },
+  {
+    "nation": "Fiji",
+    "year": 2005,
+    "sea_level_anomaly_m": -0.0536
+  },
+  {
+    "nation": "Fiji",
+    "year": 2006,
+    "sea_level_anomaly_m": -0.0226
+  },
+  {
+    "nation": "Fiji",
+    "year": 2007,
+    "sea_level_anomaly_m": 0.0093
+  },
+  {
+    "nation": "Fiji",
+    "year": 2008,
+    "sea_level_anomaly_m": 0.0432
+  },
+  {
+    "nation": "Fiji",
+    "year": 2009,
+    "sea_level_anomaly_m": 0.0594
+  },
+  {
+    "nation": "Fiji",
+    "year": 2010,
+    "sea_level_anomaly_m": -0.0271
+  },
+  {
+    "nation": "Fiji",
+    "year": 2011,
+    "sea_level_anomaly_m": 0.0375
+  },
+  {
+    "nation": "Fiji",
+    "year": 2012,
+    "sea_level_anomaly_m": 0.0879
+  },
+  {
+    "nation": "Fiji",
+    "year": 2013,
+    "sea_level_anomaly_m": 0.0206
+  },
+  {
+    "nation": "Fiji",
+    "year": 2014,
+    "sea_level_anomaly_m": 0.0019
+  },
+  {
+    "nation": "Fiji",
+    "year": 2015,
+    "sea_level_anomaly_m": -0.0039
+  },
+  {
+    "nation": "Fiji",
+    "year": 2016,
+    "sea_level_anomaly_m": -0.0206
+  },
+  {
+    "nation": "Fiji",
+    "year": 2017,
+    "sea_level_anomaly_m": 0.0196
+  },
+  {
+    "nation": "Fiji",
+    "year": 2018,
+    "sea_level_anomaly_m": 0.0157
+  },
+  {
+    "nation": "Fiji",
+    "year": 2019,
+    "sea_level_anomaly_m": 0.0189
+  },
+  {
+    "nation": "Fiji",
+    "year": 2020,
+    "sea_level_anomaly_m": 0.0288
+  },
+  {
+    "nation": "Fiji",
+    "year": 2021,
+    "sea_level_anomaly_m": 0.0746
+  },
+  {
+    "nation": "Fiji",
+    "year": 2022,
+    "sea_level_anomaly_m": 0.1316
+  },
+  {
+    "nation": "Fiji",
+    "year": 2023,
+    "sea_level_anomaly_m": 0.0662
+  },
+  {
+    "nation": "Fiji",
+    "year": 2024,
+    "sea_level_anomaly_m": 0.0219
+  },
+  {
+    "nation": "Fiji",
+    "year": 2025,
+    "sea_level_anomaly_m": 0.0068
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1993,
+    "sea_level_anomaly_m": -0.0783
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1994,
+    "sea_level_anomaly_m": -0.052
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1995,
+    "sea_level_anomaly_m": -0.0923
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1996,
+    "sea_level_anomaly_m": -0.0279
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1997,
+    "sea_level_anomaly_m": -0.0115
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1998,
+    "sea_level_anomaly_m": -0.118
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 1999,
+    "sea_level_anomaly_m": 0.0129
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2000,
+    "sea_level_anomaly_m": -0.0509
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2001,
+    "sea_level_anomaly_m": -0.0498
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2002,
+    "sea_level_anomaly_m": -0.0599
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2003,
+    "sea_level_anomaly_m": -0.0506
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2004,
+    "sea_level_anomaly_m": -0.0569
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2005,
+    "sea_level_anomaly_m": -0.0418
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2006,
+    "sea_level_anomaly_m": 0.0429
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2007,
+    "sea_level_anomaly_m": 0.0329
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2008,
+    "sea_level_anomaly_m": 0.0209
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2009,
+    "sea_level_anomaly_m": 0.0101
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2011,
+    "sea_level_anomaly_m": 0.051
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2012,
+    "sea_level_anomaly_m": 0.0644
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2013,
+    "sea_level_anomaly_m": -0.0209
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2014,
+    "sea_level_anomaly_m": 0.0071
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2015,
+    "sea_level_anomaly_m": -0.0096
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2016,
+    "sea_level_anomaly_m": 0.0247
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2017,
+    "sea_level_anomaly_m": 0.0257
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2018,
+    "sea_level_anomaly_m": -0.0039
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2019,
+    "sea_level_anomaly_m": 0.0506
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2020,
+    "sea_level_anomaly_m": 0.0265
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2021,
+    "sea_level_anomaly_m": 0.0996
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2022,
+    "sea_level_anomaly_m": 0.1176
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2023,
+    "sea_level_anomaly_m": 0.0739
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2024,
+    "sea_level_anomaly_m": 0.0589
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2025,
+    "sea_level_anomaly_m": 0.0047
+  }
+]
