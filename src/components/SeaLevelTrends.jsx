@@ -9,6 +9,11 @@ import TrendChart from './TrendChart.jsx'
 import InsightsPanel from './InsightsPanel.jsx'
 import Tooltip from './Tooltip.jsx'
 
+// Computed once at module load, not inline in JSX -- see
+// DroughtSnapshot.jsx for why an inline d3.format() call would cause
+// the chart to fully redraw on every hover/touch.
+const YTICK_FORMAT = d3.format('.2f')
+
 // The "compare" section for Sea Level Rise -- same role
 // DroughtTrends.jsx/RippleChain.jsx play for their pages, shaped for a
 // continuous long-term trend: one chart (there's only one real metric
@@ -60,7 +65,7 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
             valueField={metric.field}
             chartType={metric.chartType}
             format={metric.format}
-            yTickFormat={d3.format('.2f')}
+            yTickFormat={YTICK_FORMAT}
             showTooltip={showTooltip}
             hideTooltip={hideTooltip}
           />

@@ -9,6 +9,11 @@ import TrendChart from './TrendChart.jsx'
 import InsightsPanel from './InsightsPanel.jsx'
 import Tooltip from './Tooltip.jsx'
 
+// Computed once at module load, not inline in JSX -- see
+// DroughtSnapshot.jsx for why an inline d3.format() call would cause
+// the chart to fully redraw on every hover/touch.
+const YTICK_FORMAT = d3.format('.2f')
+
 // The "compare" section for El Nino & Drought -- plays the role
 // RippleChain.jsx plays for Cyclones, but shaped for a recurring cycle
 // rather than a single event: a full 1958-2021 line per nation
@@ -70,7 +75,7 @@ export default function DroughtTrends({ data, selectedNations, style }) {
               valueField={m.field}
               chartType={m.chartType}
               format={m.format}
-              yTickFormat={d3.format('.2f')}
+              yTickFormat={YTICK_FORMAT}
               showTooltip={showTooltip}
               hideTooltip={hideTooltip}
               index={i}

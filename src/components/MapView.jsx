@@ -5,7 +5,8 @@ import Section from './Section.jsx'
 import Tooltip from './Tooltip.jsx'
 import MapControlIcon from './MapControlIcon.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
-import { SELECTION_COLORS } from '../utils/theme.js'
+import { useTheme } from '../hooks/useTheme.jsx'
+import { SELECTION_COLORS, MAP_COLORS } from '../utils/theme.js'
 import { resetSvg } from '../utils/d3helpers.js'
 import { motionDuration } from '../utils/motion.js'
 
@@ -73,6 +74,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
   const gRef = useRef(null)
   const zoomRef = useRef(null)
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
+  const { theme } = useTheme()
 
   // The marker-setup effect below runs once on mount, so its D3 event
   // closures would otherwise capture `selected` at that moment and
@@ -83,6 +85,15 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
   useEffect(() => {
     selectedRef.current = selected
   }, [selected])
+
+  // Same reasoning as selectedRef, for the map's initial ocean/land
+  // paint -- the setup effect below has an intentionally empty
+  // dependency array, so it only ever sees `theme` via this ref's live
+  // value, not a stale value captured at mount.
+  const themeRef = useRef(theme)
+  useEffect(() => {
+    themeRef.current = theme
+  }, [theme])
 
   // Build the map once: basemap, projection, markers, zoom behaviour.
   // Selection color updates happen in the effect below instead, so
@@ -129,21 +140,25 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
 
       // Ocean background, then real coastlines through the same
       // projection -- anything outside the viewBox is cropped, same as
-      // any regional map.
+      // any regional map. Classed so the theme-color effect below can
+      // find and recolor these without rebuilding the whole map.
+      const initialColors = MAP_COLORS[themeRef.current] ?? MAP_COLORS.light
       g.append('rect')
+        .attr('class', 'ocean-bg')
         .attr('x', -2000)
         .attr('y', -2000)
         .attr('width', WIDTH + 4000)
         .attr('height', HEIGHT + 4000)
-        .attr('fill', '#7FBFD9')
+        .attr('fill', initialColors.ocean)
 
       const geoPath = d3.geoPath(projection)
       const landFeature = feature(land50m, land50m.objects.land)
       g.append('path')
+        .attr('class', 'land')
         .datum(landFeature)
         .attr('d', geoPath)
-        .attr('fill', '#FAF7F0')
-        .attr('stroke', '#C9DCE2')
+        .attr('fill', initialColors.land)
+        .attr('stroke', initialColors.coastline)
         .attr('stroke-width', 0.5)
 
       // Drag-to-pan and touch pinch-to-zoom stay on. Mouse-wheel /
@@ -284,6 +299,23 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
         return i === -1 ? '' : String(i + 1)
       })
   }, [selected])
+
+  // Recolor ocean/land/coastline on theme change, without rebuilding
+  // the map. No-ops harmlessly if the async setup effect above hasn't
+  // finished yet (gRef.current still null) -- that race is already
+  // handled by setup() itself reading the live theme via themeRef.
+  useEffect(() => {
+    if (!gRef.current) return
+    const colors = MAP_COLORS[theme] ?? MAP_COLORS.light
+    const duration = motionDuration(200)
+    gRef.current.select('rect.ocean-bg').transition().duration(duration).attr('fill', colors.ocean)
+    gRef.current
+      .select('path.land')
+      .transition()
+      .duration(duration)
+      .attr('fill', colors.land)
+      .attr('stroke', colors.coastline)
+  }, [theme])
 
   function zoomBy(factor) {
     if (!zoomRef.current || !svgRef.current) return

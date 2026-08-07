@@ -23,7 +23,13 @@ const SECTION_COLORS_BY_THEME = {
   dark: {
     plain: '#181E21',
     panel: '#222A2E',
-    ink: '#F0ECE3', // footer flips to a light panel in dark mode, since 'ink' is the light tone there
+    // Same value as panel, by design -- the footer/Home-hero's 'ink'
+    // tone now renders as dark:bg-panel (see CitationPanel.jsx and
+    // Section.jsx), not a full flip to the light ink tone, since that
+    // flip read as too bright in practice. PacificBorder needs this to
+    // match whatever those sections actually paint, or the wave seam
+    // shows a visible color mismatch right at the boundary.
+    ink: '#222A2E',
   },
 }
 
@@ -60,3 +66,16 @@ export const CHART_SURFACE = {
 // against sand ~3.7:1, against panel ~3.3:1 -- visible as a pattern,
 // not load-bearing text.
 export const PEWTER = '#7A8183'
+
+// Map ocean/land/coastline (MapView.jsx). Left fixed in the earlier
+// dark-mode pass (a deliberate "nautical chart keeps its own colors"
+// choice, like an embedded Google Map often does) -- direct feedback
+// was that the bright light-mode ocean/land read as too much contrast
+// against an otherwise dark page, so these get a dimmed, desaturated
+// dark-mode counterpart in the same hue family rather than staying
+// fixed. Markers/selection colors are unchanged -- already legible on
+// both backgrounds.
+export const MAP_COLORS = {
+  light: { ocean: '#7FBFD9', land: '#FAF7F0', coastline: '#C9DCE2' },
+  dark: { ocean: '#2E4A57', land: '#293236', coastline: '#3E4B50' },
+}

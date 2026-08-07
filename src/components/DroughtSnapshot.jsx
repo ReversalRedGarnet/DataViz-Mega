@@ -7,6 +7,15 @@ import { useTooltip } from '../hooks/useTooltip.js'
 import { METRICS, REFERENCE_YEAR } from '../utils/droughtMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
 
+// Computed once at module load, not inside the component -- d3.format
+// returns a brand-new function object on every call, even with the
+// same string. Calling it inline in JSX would hand MetricSnapshotChart
+// a "changed" yTickFormat prop (by reference) on every re-render,
+// including the ones triggered by hovering the chart's own tooltip --
+// which would re-trigger its draw effect and replay the whole chart's
+// entrance animation on every hover/touch.
+const YTICK_FORMAT = d3.format('.2f')
+
 // Regional snapshot for the El Nino & Drought page -- same job
 // BigPicture's snapshot half plays for Cyclones (all nations, one
 // fixed moment, side by side), kept as its own small component
@@ -58,7 +67,7 @@ export default function DroughtSnapshot({ data, nations, style }) {
                 missingNote={`No ${REFERENCE_YEAR} data available for ${formatNationList(nationsMissing)}.`}
                 emptyNote={`Data not available for ${REFERENCE_YEAR}.`}
                 format={m.format}
-                yTickFormat={d3.format('.2f')}
+                yTickFormat={YTICK_FORMAT}
                 showTooltip={showTooltip}
                 hideTooltip={hideTooltip}
                 index={i}

@@ -10,10 +10,17 @@
 // divider between them does that (see sectionColorsFor(theme)), so a
 // panel/ink section's background starts and ends exactly at the wave
 // seam rather than a flat cut.
+//
+// ink's dark:bg-panel/dark:text-ink pair (not a plain ink/sand flip)
+// matches CitationPanel.jsx's footer fix -- see that file's comment
+// for why an un-overridden bg-ink goes too bright in dark mode. PageHero's
+// own text (kicker/body/cta) uses plain opacity-NN rather than an
+// explicit text-sand/NN, so it inherits this correctly without needing
+// its own dark: overrides.
 const TONES = {
   plain: 'bg-sand',
   panel: 'bg-panel',
-  ink: 'bg-ink text-sand',
+  ink: 'bg-ink text-sand dark:bg-panel dark:text-ink',
 }
 
 export default function Section({ tone = 'plain', className = '', style, children, ...rest }) {

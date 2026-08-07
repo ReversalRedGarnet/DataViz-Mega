@@ -7,6 +7,11 @@ import { useTooltip } from '../hooks/useTooltip.js'
 import { TREND_METRIC } from '../utils/seaLevelMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
 
+// Computed once at module load, not inline in JSX -- see
+// DroughtSnapshot.jsx for why an inline d3.format() call would cause
+// the chart to fully redraw on every hover/touch.
+const YTICK_FORMAT = d3.format('.1f')
+
 // Regional snapshot for Sea Level Rise -- one bar per nation, but
 // unlike DroughtSnapshot.jsx/BigPicture.jsx there's no shared
 // reference YEAR to anchor this to (sea level rise has no event and
@@ -58,7 +63,7 @@ export default function SeaLevelSnapshot({ data, nations, style }) {
           missingNote={`Not enough years of reliable data to compute a trend for ${formatNationList(nationsMissing)}.`}
           emptyNote="Trend data not available."
           format={TREND_METRIC.format}
-          yTickFormat={d3.format('.1f')}
+          yTickFormat={YTICK_FORMAT}
           showTooltip={showTooltip}
           hideTooltip={hideTooltip}
         />
