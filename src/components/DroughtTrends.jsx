@@ -15,18 +15,15 @@ import Tooltip from './Tooltip.jsx'
 // the chart to fully redraw on every hover/touch.
 const YTICK_FORMAT = d3.format('.2f')
 
-// The "compare" section for El Nino & Drought -- plays the role
-// RippleChain.jsx plays for Cyclones, but shaped for a recurring cycle
-// rather than a single event: a full 1958-2021 line per nation
-// instead of a before/after snapshot, and a comparative note about how
-// OFTEN each nation has crossed into drought rather than how much a
-// single event changed things.
+// The "compare" section for El Nino & Drought. Shaped for a recurring cycle
+// rather than a single event: a full 1958-2021 line per nation, and a note
+// about how OFTEN each has crossed into drought rather than how much one event
+// changed.
 //
 // Props:
 //   data -- { [metricKey]: rows }, from useMetricData(METRICS)
-//   selectedNations -- ordered array of nation names selected on the
-//     map; order drives colour, kept in sync with the map's badges
-//   style -- forwarded to the underlying Section
+//   selectedNations -- ordered; order drives colour, matching the map's badges
+//   style -- forwarded to Section
 export default function DroughtTrends({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
@@ -89,9 +86,8 @@ export default function DroughtTrends({ data, selectedNations, style }) {
   )
 }
 
-// Counts, for each nation, how many years in its own SPI-12 record hit
-// DROUGHT_THRESHOLD (-1) or below -- a direct, real readout of the
-// already-standard index (see droughtMetrics.js), not a new score.
+// How many years in each nation's own SPI-12 record hit DROUGHT_THRESHOLD or
+// below -- a readout of the standard index, not a new score.
 function buildDroughtYearComparison(data, nationA, nationB) {
   const spi = data.spi12 ?? []
   const rowsA = spi.filter((d) => d.nation === nationA)

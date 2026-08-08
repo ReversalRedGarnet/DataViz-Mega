@@ -14,17 +14,14 @@ import Tooltip from './Tooltip.jsx'
 // the chart to fully redraw on every hover/touch.
 const YTICK_FORMAT = d3.format('.2f')
 
-// The "compare" section for Sea Level Rise -- same role
-// DroughtTrends.jsx/RippleChain.jsx play for their pages, shaped for a
-// continuous long-term trend: one chart (there's only one real metric
-// here -- see seaLevelMetrics.js), plus each selected nation's own
+// The "compare" section for Sea Level Rise. Shaped for a continuous trend: one
+// chart, since there's only one real metric here, plus each nation's own
 // mm/year trend restated in plain language underneath.
 //
 // Props:
 //   data -- { series, trend }, from useSeaLevelData()
-//   selectedNations -- ordered array of nation names selected on the
-//     map; order drives colour, kept in sync with the map's badges
-//   style -- forwarded to the underlying Section
+//   selectedNations -- ordered; order drives colour, matching the map's badges
+//   style -- forwarded to Section
 export default function SeaLevelTrends({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
   const metric = METRICS[0]
@@ -79,11 +76,8 @@ export default function SeaLevelTrends({ data, selectedNations, style }) {
   )
 }
 
-// Restates each selected nation's own mm/year trend (already computed
-// in the pipeline via ordinary least squares -- see
-// clean_sea_level_data.py) in plain language. Not a new calculation;
-// this is the same TREND_METRIC data SeaLevelSnapshot.jsx charts,
-// just read out for whichever 1-2 nations are currently selected.
+// The same TREND_METRIC figures SeaLevelSnapshot charts, read out in plain
+// language for the current selection. Not a new calculation.
 function buildTrendNote(trendRows, selectedNations) {
   const rows = []
   for (const nation of selectedNations) {

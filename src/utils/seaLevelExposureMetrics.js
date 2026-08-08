@@ -1,14 +1,9 @@
-// Metric definitions for the Sea Level Rise page's population-
-// exposure section. Filenames match
-// data-pipeline/clean_sea_level_exposure_data.py's output.
+// Filenames match clean_sea_level_exposure_data.py's output.
 //
-// Distinct from METRICS in seaLevelMetrics.js -- these describe how
-// many people live within reach of sea level, not how fast the ocean
-// itself is rising. A snapshot, not a trend: the underlying SPC
-// estimates are flat for years at a stretch between periodic
-// revisions (see the pipeline script), so a year-by-year line would
-// misrepresent a periodically-revised model as a continuously
-// measured process.
+// How many people live within reach of sea level, not how fast it's rising. A
+// snapshot rather than a trend: the SPC estimates hold flat for years between
+// periodic revisions, so a year-by-year line would present a revised model as a
+// continuously measured process.
 export const METRICS = [
   {
     key: 'pct_within_10m',
@@ -29,7 +24,6 @@ export const METRICS = [
 // Latest year with full coverage across all 6 nations.
 export const REFERENCE_YEAR = 2024
 
-// Data-quality notes (e.g. an unusually large revision -- see the
-// pipeline script) as their own file, not folded into METRICS above,
-// since it's per-nation commentary rather than a per-year data point.
+// Per-nation commentary (an unusually large revision, say) rather than per-year
+// data points, so its own file rather than a metric.
 export const NOTES_FILE = 'sea_level_exposure_notes.json'

@@ -1,19 +1,13 @@
 import { Link } from 'react-router-dom'
 
-// One hazard story, as a card on the homepage grid. Deliberately
-// louder than a StatTile/MetricChart card elsewhere on the site (a
-// thick coloured top border, a bigger heading) rather than the exact
-// same quiet vocabulary those use -- per direct feedback that Home
-// should read as more "in your face" than the hazard pages it
-// introduces. The accent colour alternates ocean/sun by position
-// rather than introducing a new hue -- both are already the site's
-// only two accent colours (see tailwind.config.js), just given more
-// visual weight here than either gets anywhere else on the site.
+// One hazard story as a homepage card. Deliberately louder than the quiet card
+// vocabulary used elsewhere -- Home should read as more "in your face" than the
+// pages it introduces -- but the accent alternates between the site's existing
+// two accent colours rather than introducing a third.
 //
 // Props:
 //   hazard -- one entry from src/content/hazards.js
-//   index -- position in the grid, both for the shared .animate-pop-in
-//     stagger AND for which of the two accent colours this card gets
+//   index -- grid position; drives both the entrance stagger and the accent
 const ACCENTS = ['border-t-ocean', 'border-t-sun']
 
 export default function HazardCard({ hazard, index = 0 }) {

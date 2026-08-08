@@ -1,15 +1,10 @@
-// Single source of truth for every hazard "story" page on the site --
-// both Header.jsx's nav and Home.jsx's card grid read from this list
-// rather than each keeping their own copy, so adding a fifth hazard
-// later means editing one array, not two.
+// Every hazard "story" page, in nav order. Header's nav, Home's card grid, and
+// App's routes all read from here, so adding a hazard means editing one array.
 //
-// `status` is deliberately visible on the homepage cards (see
-// HazardCard.jsx), not just an internal build flag: a card that says
-// "data pipeline in progress" is an honest placeholder, the same way
-// NoDataNote/EmptyState are honest about missing data mid-page rather
-// than papering over it. 'built' means real data, wired end to end.
-// 'shell' means the page, layout, map, and framing are real, but the
-// numeric sections are still waiting on their pipeline.
+// `status` is shown on the homepage cards, not just an internal flag -- a card
+// that admits its page is a shell is honest in the same way NoDataNote is.
+// 'built' means real data wired end to end; 'shell' means the layout, map and
+// framing are real but the numbers are still waiting on a pipeline.
 export const HAZARDS = [
   {
     slug: 'cyclones',
@@ -31,7 +26,7 @@ export const HAZARDS = [
     kicker: 'Recurring, roughly every 2–7 years · one oscillation, uneven readiness.',
     cardBlurb:
       "El Niño reaches every Pacific nation on the same rough cycle. Which nations have water when it arrives is a separate question.",
-    status: 'shell',
+    status: 'built',
   },
   {
     slug: 'sea-level-rise',
@@ -42,6 +37,6 @@ export const HAZARDS = [
     kicker: 'Decades of tide-gauge record · one rising ocean, unequal exposure.',
     cardBlurb:
       "The ocean is rising at close to the same rate everywhere it's measured. What's in its way is not the same everywhere.",
-    status: 'shell',
+    status: 'built',
   },
 ]

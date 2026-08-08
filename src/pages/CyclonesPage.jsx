@@ -5,17 +5,11 @@ import MapView from '../components/MapView.jsx'
 import RippleChain from '../components/RippleChain.jsx'
 import ComparisonView from '../components/ComparisonView.jsx'
 import CitationPanel from '../components/CitationPanel.jsx'
-import PacificBorder from '../components/PacificBorder.jsx'
+import PageSections from '../components/PageSections.jsx'
 import { useSelection, selectionAnnouncement } from '../hooks/useSelection.js'
 import { useMetricData } from '../hooks/useMetricData.js'
-import { useTheme } from '../hooks/useTheme.jsx'
 import { METRICS } from '../utils/metrics.js'
-import { sectionColorsFor } from '../utils/theme.js'
-import { delayStyle } from '../utils/motion.js'
 
-// The original Ripple site, unchanged in substance -- this is the same
-// content that used to live directly in App.jsx before the site grew
-// a homepage and sibling hazard pages.
 const DATA_SOURCES = [
   {
     label: 'Number of directly affected persons attributed to disasters — Pacific Data Hub (SPC)',
@@ -50,59 +44,40 @@ const DATA_SOURCES = [
   },
 ]
 
-// Tone for each major section, top to bottom -- the source of truth
-// for both which background each Section uses and which two colors
-// each PacificBorder divider bounds (see sectionColorsFor in
-// theme.js). 'plain' sections are the interactive canvas (Hero/Storm
-// profile/Map/RippleChain); 'panel' is reserved for the two sections
-// that read as an editorial aside (BigPicture, Compare recovery).
-const SECTION_TONES = ['plain', 'plain', 'panel', 'plain', 'plain', 'panel']
-const FOOTER_TONE = 'ink'
-
-
 export default function CyclonesPage() {
   const data = useMetricData(METRICS)
   const { selected, toggle, clear } = useSelection()
-  const { theme } = useTheme()
-  const colors = sectionColorsFor(theme)
-
-  const [heroTone, stormTone, bigPictureTone, mapTone, rippleTone, comparisonTone] = SECTION_TONES
 
   return (
     <>
-      {/* Announces selection changes to screen readers, since the
-          charts/comparison view below otherwise update silently. */}
+      {/* The charts and comparison view below update silently otherwise. */}
       <div aria-live="polite" className="sr-only">
         {selectionAnnouncement(selected, 'Showing its ripple chain below.')}
       </div>
 
-      <div id="top">
-        <Hero style={delayStyle(0)} />
-      </div>
-      <PacificBorder colorAbove={colors[heroTone]} colorBelow={colors[stormTone]} />
-      <div id="storm-profile">
-        <StormProfile style={delayStyle(1)} />
-      </div>
-      <PacificBorder colorAbove={colors[stormTone]} colorBelow={colors[bigPictureTone]} />
-      <div id="big-picture">
-        <BigPicture data={data} style={delayStyle(2)} />
-      </div>
-      <PacificBorder colorAbove={colors[bigPictureTone]} colorBelow={colors[mapTone]} />
-      <div id="map">
-        <MapView selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(3)} />
-      </div>
-      <PacificBorder colorAbove={colors[mapTone]} colorBelow={colors[rippleTone]} />
-      <div id="ripple-chain">
-        <RippleChain data={data} selectedNations={selected} style={delayStyle(4)} />
-      </div>
-      <PacificBorder colorAbove={colors[rippleTone]} colorBelow={colors[comparisonTone]} />
-      <div id="compare">
-        <ComparisonView data={data} selectedNations={selected} style={delayStyle(5)} />
-      </div>
-      <PacificBorder colorAbove={colors[comparisonTone]} colorBelow={colors[FOOTER_TONE]} />
-      <div id="sources">
-        <CitationPanel sources={DATA_SOURCES} style={delayStyle(6)} />
-      </div>
+      <PageSections
+        sections={[
+          { id: 'top', tone: 'plain', element: <Hero /> },
+          { id: 'storm-profile', tone: 'plain', element: <StormProfile /> },
+          { id: 'big-picture', tone: 'panel', element: <BigPicture data={data} /> },
+          {
+            id: 'map',
+            tone: 'plain',
+            element: <MapView selected={selected} onToggle={toggle} onClear={clear} />,
+          },
+          {
+            id: 'ripple-chain',
+            tone: 'plain',
+            element: <RippleChain data={data} selectedNations={selected} />,
+          },
+          {
+            id: 'compare',
+            tone: 'panel',
+            element: <ComparisonView data={data} selectedNations={selected} />,
+          },
+          { id: 'sources', tone: 'ink', element: <CitationPanel sources={DATA_SOURCES} /> },
+        ]}
+      />
     </>
   )
 }

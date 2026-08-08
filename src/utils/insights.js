@@ -1,12 +1,9 @@
 import { METRICS, EVENT_YEAR } from './metrics.js'
 import { pctChange } from './rows.js'
 
-// One bullet per metric (five total) comparing the two selected
-// nations from the event year to the latest year on record --
-// deliberately not an attempt to rank/pick "the most interesting"
-// findings, just a direct, honest readout of what the same five
-// metrics used elsewhere on the page say about these two nations,
-// so every bullet traces back to a specific chart above it.
+// One bullet per metric, comparing the two selected nations from the event year
+// to the latest on record. Deliberately not a ranking of "most interesting"
+// findings: every bullet traces back to a specific chart above it.
 //
 // Returns [{ key, text }], always exactly METRICS.length entries.
 
@@ -46,10 +43,8 @@ export function buildComparativeInsights(data, nationA, nationB) {
       }
     }
 
-    // The event year can also be the last year either nation has on
-    // record -- i.e. there's no post-event data at all, not a 0%
-    // change. "X went from N to N" would misleadingly read as a real
-    // (non-)result rather than an absence of newer data.
+    // The event year can also be the last year on record: no post-event data
+    // at all, not a 0% change. "X went from N to N" would read as a result.
     const noNewDataA = latestA.year === EVENT_YEAR
     const noNewDataB = latestB.year === EVENT_YEAR
     if (noNewDataA && noNewDataB) {

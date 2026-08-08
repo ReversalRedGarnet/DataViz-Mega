@@ -7,16 +7,13 @@ import EmptyState from './EmptyState.jsx'
 import NoDataNote from './NoDataNote.jsx'
 import Tooltip from './Tooltip.jsx'
 
-// Side-by-side view of the currently selected nations across each stage
-// of the ripple chain, comparing the event year against the latest year
-// on record. Replaces the full vulnerability-dimension explorer from the
-// original brainstorm -- see README.md -> "Scope (locked)".
+// The selected nations side by side across each stage of the ripple chain,
+// event year against the latest year on record.
 //
 // Props:
 //   data -- { [metricKey]: Array<{ nation, year, [field]: number }> }
-//   selectedNations -- ordered array of nation names selected in MapView
-//   style -- forwarded to the underlying Section, used by App.jsx to
-//     stagger each section's entrance on first load
+//   selectedNations -- ordered; order drives colour
+//   style -- forwarded to Section (entrance stagger)
 export default function ComparisonView({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
@@ -92,11 +89,9 @@ function NationSummary({ nation, data, color, index, showTooltip, hideTooltip })
   )
 }
 
-// One metric's row: the raw before/after figures plus a compact
-// direction + magnitude badge. Deliberately ink-only (a triangle
-// glyph carries the direction, not a red/green colour pairing) so this
-// doesn't reintroduce a colour-coding scheme on top of the one the
-// rest of the page already uses for nation selection.
+// Before/after figures plus a direction and magnitude badge. Ink-only, with a
+// glyph carrying the direction rather than red/green, so this doesn't layer a
+// second colour scheme on top of the one used for nation selection.
 function Delta({ metric, eventRow, latestRow }) {
   const from = eventRow[metric.field]
   const to = latestRow[metric.field]

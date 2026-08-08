@@ -1,29 +1,21 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
-// Site-wide light/dark state, via Context rather than a prop threaded
-// through every page -- unlike useSelection() (genuinely per-page,
-// reset on navigation), theme is the one piece of state that's
-// meaningfully global: Header's toggle button needs to set it, and
-// every D3 chart-drawing component across every page needs to read it
-// (see theme.js's CHART_INK/sectionColorsFor -- axis text and the wave
-// divider's fill both need to know which palette is active). Threading
-// that through props would mean every page and every chart component
-// takes a `theme` prop it just forwards, which is what Context exists
-// to avoid.
+// Site-wide light/dark state. Context rather than props because both ends of
+// the site need it: Header's toggle sets it, and every D3-drawing component on
+// every page reads it (axis text and the wave divider need a real colour
+// string, not a Tailwind class -- see theme.js).
 const ThemeContext = createContext(null)
 
+// Also read by the inline script in index.html, which applies the same choice
+// before first paint. Renaming it here means renaming it there.
 const STORAGE_KEY = 'ripple-theme'
 
 function getInitialTheme() {
   if (typeof window === 'undefined') return 'light'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (stored === 'light' || stored === 'dark') return stored
-  // No explicit choice made in this browser yet -- default to the
-  // OS-level preference rather than always starting light. Read once,
-  // on mount; a manual toggle after this always wins (it's written to
-  // localStorage immediately below), so this never fights a person's
-  // explicit choice, and there's no need to keep listening for the OS
-  // setting to change later.
+  // No explicit choice in this browser yet, so follow the OS. Read once: a
+  // later manual toggle is written to localStorage and wins from then on.
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
@@ -42,10 +34,8 @@ export function ThemeProvider({ children }) {
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
 }
 
-// Throws rather than silently defaulting if used outside the provider
-// -- a chart rendering with the wrong palette because this hook was
-// called somewhere ThemeProvider doesn't wrap is a much harder bug to
-// spot than a clear error at the call site.
+// Throws rather than defaulting: a chart quietly rendering in the wrong
+// palette is far harder to spot than an error at the call site.
 export function useTheme() {
   const ctx = useContext(ThemeContext)
   if (!ctx) throw new Error('useTheme must be used within a ThemeProvider')

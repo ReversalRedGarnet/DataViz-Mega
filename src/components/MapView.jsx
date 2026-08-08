@@ -10,22 +10,14 @@ import { SELECTION_COLORS, MAP_COLORS } from '../utils/theme.js'
 import { resetSvg } from '../utils/d3helpers.js'
 import { motionDuration } from '../utils/motion.js'
 
-// Illustrative Pacific map: real coastlines with fixed markers on top,
-// pan + zoom via d3-zoom, click to select up to two nations. No tile
-// server, no API key -- public/land-50m.json is a static export from
-// the 'world-atlas' npm package (50m resolution; re-copy
-// node_modules/world-atlas/land-50m.json there if it's ever missing),
-// fetched once at runtime so it doesn't bloat the main bundle.
+// Illustrative Pacific map: real coastlines, fixed markers, pan and zoom, click
+// to select up to two nations. No tile server or API key -- public/land-50m.json
+// is a static export from the 'world-atlas' package, fetched at runtime so it
+// stays out of the main bundle.
 //
-// Default nation set: the four countries Cyclone Harold hit in April
-// 2020. Coordinates are approximate (capital city) -- fine for an
-// illustrative map, not navigation. `blurb` feeds the marker tooltip.
-//
-// Exported as NATIONS, not CYCLONE_NATIONS -- BigPicture.jsx and
-// CyclonesPage.jsx already import this name for the cyclone-specific
-// stat tiles; MapView also accepts a `nations` prop for other hazard
-// pages to pass their own set through (see ElNinoDroughtPage.jsx /
-// SeaLevelRisePage.jsx).
+// Default nation set: the four countries Cyclone Harold hit. Coordinates are
+// approximate (capital city), which is fine for an illustrative map and not for
+// navigation. Other hazard pages pass their own set via the `nations` prop.
 export const NATIONS = [
   { name: 'Fiji', lat: -18.14, lon: 178.44, blurb: 'Struck by the same cyclone; moderate, uneven impact.' },
   {
@@ -41,9 +33,8 @@ export const NATIONS = [
 const WIDTH = 700
 const HEIGHT = 460
 
-// Builds tooltip content from current selection state, so the "tap to
-// select / compare / deselect" hint stays accurate regardless of when
-// the hover/focus/tap happens.
+// Built from live selection state so the "tap to select / compare / deselect"
+// hint is accurate whenever the hover, focus or tap happens.
 function markerTooltipContent(nation, selected) {
   const i = selected.indexOf(nation.name)
   let status
@@ -76,30 +67,23 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
   const { theme } = useTheme()
 
-  // The marker-setup effect below runs once on mount, so its D3 event
-  // closures would otherwise capture `selected` at that moment and
-  // never see later selections. Reading through a ref keeps the
-  // tooltip's hint current without rebuilding the map (which would
-  // reset pan/zoom) on every selection change.
+  // The setup effect runs once, so its D3 closures would capture `selected` at
+  // mount and never see a later pick. A ref keeps the hint current without
+  // rebuilding the map, which would reset pan and zoom.
   const selectedRef = useRef(selected)
   useEffect(() => {
     selectedRef.current = selected
   }, [selected])
 
-  // Same reasoning as selectedRef, for the map's initial ocean/land
-  // paint -- the setup effect below has an intentionally empty
-  // dependency array, so it only ever sees `theme` via this ref's live
-  // value, not a stale value captured at mount.
+  // Same reasoning, for the map's initial ocean/land paint.
   const themeRef = useRef(theme)
   useEffect(() => {
     themeRef.current = theme
   }, [theme])
 
-  // Build the map once: basemap, projection, markers, zoom behaviour.
-  // Selection color updates happen in the effect below instead, so
-  // panning/zooming isn't reset on every marker click. The coastline
-  // fetch is async; `cancelled` guards against touching anything after
-  // unmount if that happens before the fetch resolves.
+  // Build the map once. Selection and theme recolouring happen in the effects
+  // below so pan/zoom survives a marker click. `cancelled` guards against the
+  // async coastline fetch resolving after unmount.
   useEffect(() => {
     let cancelled = false
 
@@ -109,10 +93,8 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
 
       const svg = resetSvg(svgRef, WIDTH, HEIGHT)
 
-      // Rotate so the antimeridian (180deg) sits at the projection's
-      // centre -- otherwise nations on opposite sides of 180deg
-      // longitude (Fiji +178 vs Samoa -172) render on opposite edges
-      // of the map instead of near each other.
+      // Antimeridian at the centre, or nations either side of 180deg (Fiji
+      // +178, Samoa -172) land on opposite edges of the map.
       const projection = d3.geoMercator().rotate([-180, 0])
 
       const points = {
@@ -123,10 +105,8 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
           geometry: { type: 'Point', coordinates: [n.lon, n.lat] },
         })),
       }
-      // Fitted to the current nation set, not the whole world, so the
-      // initial view stays zoomed into wherever those markers actually
-      // are. Padding is generous (65px) so labels and the zoom-control
-      // buttons don't crowd a marker near an edge.
+      // Fitted to the current nation set, not the world. The 65px padding keeps
+      // labels and the zoom buttons off a marker near an edge.
       projection.fitExtent(
         [
           [65, 65],
@@ -138,10 +118,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
       const g = svg.append('g')
       gRef.current = g
 
-      // Ocean background, then real coastlines through the same
-      // projection -- anything outside the viewBox is cropped, same as
-      // any regional map. Classed so the theme-color effect below can
-      // find and recolor these without rebuilding the whole map.
+      // Classed so the theme effect below can recolour these in place.
       const initialColors = MAP_COLORS[themeRef.current] ?? MAP_COLORS.light
       g.append('rect')
         .attr('class', 'ocean-bg')
@@ -161,9 +138,8 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
         .attr('stroke', initialColors.coastline)
         .attr('stroke-width', 0.5)
 
-      // Drag-to-pan and touch pinch-to-zoom stay on. Mouse-wheel /
-      // trackpad scroll is excluded from triggering zoom so scrolling
-      // past the map on the page doesn't accidentally zoom it.
+      // Wheel is excluded so scrolling past the map doesn't zoom it. Drag and
+      // pinch stay on.
       const zoom = d3
         .zoom()
         .scaleExtent([1, 6])
@@ -188,8 +164,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
         .attr('aria-label', (d) => `Select ${d.name}`)
         .on('click', (event, d) => {
           onToggle(d.name)
-          // selectedRef hasn't updated for this toggle yet -- the
-          // status line is one beat behind for a single tap at most.
+          // selectedRef hasn't caught this toggle yet: one beat behind, once.
           showTooltip(event, markerTooltipContent(d, selectedRef.current))
         })
         .on('keydown', (event, d) => {
@@ -207,9 +182,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
         })
         .on('blur', hideTooltip)
 
-      // Larger invisible circle for a comfortable tap target, without
-      // changing the visible dot size. pointer-events set explicitly
-      // so it's clickable despite being transparent.
+      // Comfortable tap target without enlarging the visible dot.
       marker
         .append('circle')
         .attr('class', 'marker-hit')
@@ -246,10 +219,8 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
         .attr('fill', 'currentColor')
         .style('pointer-events', 'none')
 
-      // Hover/focus "grow" on the dot -- cheap feedback that it's
-      // interactive. Shrinks back to whichever resting size is
-      // currently correct (8.5 selected, 7 not) via selectedRef, since
-      // the selection-driven pop below can leave a marker at either.
+      // Shrinks back to whichever resting size is currently right (8.5 when
+      // selected, 7 when not) -- the selection pop below leaves either.
       marker
         .on('pointerenter.grow', function () {
           d3.select(this).select('circle.marker-dot').attr('r', 10)
@@ -264,16 +235,13 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
     return () => {
       cancelled = true
     }
-    // Runs once on mount. `nations` is intentionally excluded: every
-    // caller passes a fixed array for the lifetime of that page, and
-    // each page fully unmounts/remounts MapView on route change anyway.
+    // `nations` is intentionally excluded: every caller passes a fixed array,
+    // and the whole component remounts on a route change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Recolor markers and show a 1/2 badge on selection change, without
-  // rebuilding the map (which would reset pan/zoom). The dot overshoots
-  // its resting size then settles, so picking a country reads as a
-  // definite "pop" of confirmation.
+  // Recolour markers and show a 1/2 badge on selection, without rebuilding.
+  // The dot overshoots then settles, so a pick reads as confirmed.
   useEffect(() => {
     if (!gRef.current) return
     const markers = gRef.current.selectAll('g.marker')
@@ -300,10 +268,7 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
       })
   }, [selected])
 
-  // Recolor ocean/land/coastline on theme change, without rebuilding
-  // the map. No-ops harmlessly if the async setup effect above hasn't
-  // finished yet (gRef.current still null) -- that race is already
-  // handled by setup() itself reading the live theme via themeRef.
+  // No-ops if setup() hasn't finished; that race is covered by themeRef.
   useEffect(() => {
     if (!gRef.current) return
     const colors = MAP_COLORS[theme] ?? MAP_COLORS.light
@@ -341,29 +306,20 @@ export default function MapView({ nations = NATIONS, selected, onToggle, onClear
         the buttons.
       </p>
       <div ref={containerRef} className="relative">
-        {/* overflow-hidden is required, not decorative: the ocean rect
-            above is drawn far past the viewBox so panning never
-            reveals empty space, but a descendant's laid-out dimensions
-            still count toward the page's scrollable area even when
-            painted over -- without an explicit clip here, that
-            oversized rect pushed the whole page into horizontal
-            overflow. Also needed for rounded-2xl to round the map's
-            contents, not just its border. */}
+        {/* overflow-hidden is load-bearing: the ocean rect is drawn far past
+            the viewBox so panning never reveals empty space, and without a clip
+            its laid-out width pushed the whole page into horizontal overflow.
+            Also what makes rounded-2xl round the contents, not just the border. */}
         <svg
           ref={svgRef}
           role="img"
           aria-label={`Map of the Pacific with ${nations.length} selectable nations`}
           className="h-auto w-full overflow-hidden rounded-2xl border-2 border-ink/15 shadow-sm"
         />
-        {/* Top-right, not bottom-right: with the cyclone nation set,
-            Tonga's marker sits near the bottom-right corner, close
-            enough that a bottom-right button column covered its
-            label. */}
+        {/* Top-right: a bottom-right column covered Tonga's label. */}
         <div className="absolute top-3 right-3 flex flex-col gap-1.5">
-          {/* 44px (h-11 w-11): comfortable minimum touch target size --
-              these are the only tap targets on the page smaller than
-              that otherwise, on the one section where a mis-tap
-              (zooming instead of panning) is most disruptive. */}
+          {/* 44px: minimum comfortable touch target, and this is the section
+              where a mis-tap is most disruptive. */}
           <button
             type="button"
             onClick={() => zoomBy(1.5)}

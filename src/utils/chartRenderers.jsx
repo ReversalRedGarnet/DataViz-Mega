@@ -12,41 +12,26 @@ function slug(nation) {
   return nation.replace(/\s+/g, '')
 }
 
-// Axis labels use only the first word of a nation's name -- "Marshall",
-// not "Marshall Islands" -- so six labels fit under a 260px chart.
+// "Marshall", not "Marshall Islands": six labels have to fit under 260px.
 function firstWord(nation) {
   return nation.split(' ')[0]
 }
 
-// Every metric this file originally charted (people affected, USD
-// loss, crop yield, tourist arrivals, GWh) is non-negative, so the
-// y-domain was always simply [0, max*1.1] -- a bar or line could only
-// ever go up from a zero floor. That stopped being true once this
-// file started also charting metrics that are signed by definition
-// (SPI/SPEI drought indices, sea-level anomaly -- see
-// droughtMetrics.js/seaLevelMetrics.js): a value like -1 needs to
-// extend the domain *below* zero, or it silently falls outside the
-// scale's domain and any bar for it collapses to zero height (a d3
-// linear scale still returns a pixel position for an out-of-domain
-// input, but the bar-height math below assumes y(0) is always the
-// larger of the two pixel values, which is only true when nothing in
-// the data is negative).
+// A domain that extends below zero when the data does. Signed metrics (SPI/
+// SPEI, sea-level anomaly) need this: a d3 linear scale happily returns a pixel
+// position for an out-of-domain input, so a negative value on a [0, max] domain
+// doesn't error, it just collapses to a zero-height bar.
 //
-// Keeps the exact original [0, max*1.1] result whenever every value
-// really is >= 0 (Math.min(0, ...allValues) is then just 0), so none
-// of the existing non-negative charts change by a single pixel.
+// Collapses to the plain [0, max*1.1] whenever every value is >= 0, so the
+// non-negative charts don't move by a pixel.
 function zeroAnchoredDomain(values) {
   const dataMin = Math.min(0, ...values)
   const dataMax = Math.max(0, ...values)
   return [dataMin < 0 ? dataMin * 1.1 : 0, dataMax * 1.1]
 }
 
-// A bar's top-left y and its height, for a value that may be above or
-// below the zero baseline -- d3's linear scale maps a larger domain
-// value to a *smaller* pixel y (SVG y grows downward), so which of
-// y(0)/y(value) is the bar's top depends on the value's sign. Used by
-// both this file's bar-chart branch and renderSnapshotChart below,
-// rather than each duplicating the min/abs logic.
+// A bar's top y and height, for a value either side of the baseline. SVG y
+// grows downward, so which of y(0)/y(value) is the top depends on the sign.
 function barTopAndHeight(y, value) {
   const yZero = y(0)
   const yValue = y(value)
@@ -55,10 +40,9 @@ function barTopAndHeight(y, value) {
 
 const INT_FORMAT = d3.format('d')
 
-// The three charts in this file share one axis look: no y-domain line,
-// faint full-width gridlines, small ink-coloured tick text tracking the
-// current theme. Only the tick generators differ, so callers build the
-// axis and these two apply the styling.
+// One axis look across all three charts: no y-domain line, faint full-width
+// gridlines, small theme-tracking tick text. Only the tick generators differ,
+// so callers build the axis and these apply the styling.
 function drawYAxis(svg, y, { ink, width, margin, tickFormat }) {
   const g = svg
     .append('g')
@@ -141,14 +125,6 @@ export function renderMetricChart(
   const width = CHART_WIDTH
   const height = CHART_HEIGHT
   const margin = CHART_MARGIN
-  // Axis text/gridlines/point-halos are the only marks in this chart
-  // that were ever literally ink/sand-coloured -- the bars/lines/
-  // points themselves use SELECTION_COLORS, a fixed accent pair
-  // that's already legible on both a light and a dark card (see
-  // theme.js). Callers pass the current theme (see useTheme.jsx) so
-  // these two stay correct without needing a redraw hack beyond the
-  // normal "theme is a dependency of the draw effect" each chart-
-  // owning component already does.
   const ink = CHART_INK[theme] ?? CHART_INK.light
   const surface = CHART_SURFACE[theme] ?? CHART_SURFACE.light
 
@@ -182,7 +158,6 @@ export function renderMetricChart(
 
   function wireMarkInteractions(selection, nation, growTo) {
     selection
-      .style('cursor', 'pointer')
       .on('pointerenter pointermove', function (event, d) {
         showTooltip(event, pointTooltip(nation, d.year, d[valueField], format))
         if (growTo) d3.select(this).transition().duration(motionDuration(120)).attr('r', growTo)
@@ -356,7 +331,6 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip, t
     .attr('fill-opacity', 0.85)
     .attr('stroke', surface)
     .attr('stroke-width', 1.5)
-    .style('cursor', 'pointer')
     .on('pointerenter pointermove', function (event, d) {
       showTooltip(event, stormPointTooltip(d))
       d3.select(this).transition().duration(motionDuration(120)).attr('r', 9)
@@ -429,7 +403,6 @@ export function renderSnapshotChart(
     .attr('fill-opacity', 0.9)
     .attr('stroke', 'transparent')
     .attr('stroke-width', 1.5)
-    .style('cursor', 'pointer')
     .on('pointerenter pointermove', function (event, d) {
       showTooltip(event, snapshotTooltip(d, format))
       d3.select(this).attr('stroke', SNAPSHOT_BAR_COLOR).attr('stroke-opacity', 0.4)

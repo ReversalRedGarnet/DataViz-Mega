@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-// Shared tooltip state for anything drawn with D3 (map markers, chart
-// points/bars) or plain React (the "no data" notes).
+// Tooltip state for anything drawn with D3 (map markers, chart marks) or plain
+// React (the "no data" notes).
 //
-// Native SVG <title>/HTML `title` only ever appear on mouse hover, so
-// they never appear on touch -- a real problem since the map leads
-// with "tap a marker". This hook backs a real HTML tooltip that
-// responds to hover, keyboard focus, and tap, reading its content off
-// the DOM event so a D3 .on() handler set up once on mount still shows
-// whatever is current when the event fires.
+// Native <title>/`title` only appear on mouse hover, never on touch -- a real
+// problem on a map whose instruction is "tap a marker". This backs a real HTML
+// tooltip covering hover, focus, and tap, reading content off the event so a
+// D3 handler bound once on mount still shows what's current when it fires.
 //
-// containerRef must be attached to a `position: relative` element that
-// wraps both the source content and <Tooltip />, so coordinates line
-// up between them.
+// containerRef must sit on a `position: relative` element wrapping both the
+// source content and <Tooltip />, so their coordinates line up.
 export function useTooltip() {
   const containerRef = useRef(null)
   const [tooltip, setTooltip] = useState(null) // { x, y, content } | null
@@ -22,8 +19,7 @@ export function useTooltip() {
     if (!container) return
     const containerRect = container.getBoundingClientRect()
 
-    // Pointer/mouse events carry clientX/clientY; focus events don't,
-    // so fall back to the focused element's own position.
+    // Focus events carry no clientX/clientY; fall back to the element itself.
     let clientX = event.clientX
     let clientY = event.clientY
     if (clientX === undefined) {
@@ -32,8 +28,7 @@ export function useTooltip() {
       clientY = targetRect.top
     }
 
-    // Clamp so the tooltip box (roughly 200px wide) doesn't run off
-    // either edge on a narrow phone screen.
+    // Clamp so the ~200px box doesn't run off either edge on a phone.
     const rawX = clientX - containerRect.left
     const x = Math.min(Math.max(rawX, 90), Math.max(containerRect.width - 90, 90))
     const y = clientY - containerRect.top
@@ -43,9 +38,7 @@ export function useTooltip() {
 
   const hideTooltip = useCallback(() => setTooltip(null), [])
 
-  // Tapping outside the container dismisses a tapped-open tooltip --
-  // without this, a touch user has no way to "hover away" like a mouse
-  // user can.
+  // A touch user can't "hover away", so tapping outside dismisses instead.
   useEffect(() => {
     function handlePointerDownOutside(event) {
       if (containerRef.current && !containerRef.current.contains(event.target)) {

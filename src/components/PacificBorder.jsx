@@ -1,10 +1,9 @@
-// Curling wave-and-spiral divider motif -- an original design, not a
-// reproduction of any traditional Pacific textile/art pattern.
+// Curling wave-and-spiral divider -- an original design, not a reproduction of
+// any traditional Pacific pattern.
 //
-// Two-tone divider: `colorAbove` fills the whole strip, then
-// `colorBelow` paints just the region below the wave line, so the
-// wave itself is the seam between sections rather than a border that
-// has to line up with a flat color cut.
+// `colorAbove` fills the strip, then `colorBelow` paints only below the wave
+// line, so the wave itself is the seam between two sections rather than a
+// border sitting next to a flat colour cut.
 const TILE_WIDTH = 40
 const TILE_COUNT = 10 // 40 * 10 = 400, matching the original total width
 const BASELINE_Y = 16
@@ -13,10 +12,8 @@ const VIEW_WIDTH = TILE_WIDTH * TILE_COUNT
 const VIEW_HEIGHT = 20
 const WAVE_STROKE = '#5B8FA3' // same ocean blue as the map markers and storm-profile points
 
-// The wave line as a sequence of cubic-bezier swells. Returns just the
-// C commands (no leading M) since the stroke and the fill region below
-// it share a start point but are used differently -- see
-// WAVE_LINE_PATH / BOTTOM_REGION_PATH.
+// The wave as cubic-bezier swells. Returns only the C commands, since the
+// stroke and the region below it share a start point but diverge after.
 function buildWaveCommands() {
   let d = ''
   for (let i = 0; i < TILE_COUNT; i++) {
@@ -31,10 +28,9 @@ function buildWaveCommands() {
   return d
 }
 
-// Small curl at each wave crest -- radius grows with angle from the
-// crest point outward. Turn count/radius tuned by rendering and
-// checking the curl stays inside the viewBox (an earlier draft poked
-// out above y=0 and bled into the section above).
+// A curl at each crest, radius growing with angle. Turn count and radius are
+// tuned to keep it inside the viewBox -- an earlier draft poked above y=0 and
+// bled into the section above.
 function buildCurlPath(cx, cy) {
   const turns = 1.15
   const rMax = 3.2

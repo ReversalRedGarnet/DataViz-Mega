@@ -1,14 +1,11 @@
-// Cyclone Harold, April 2020 -- the before/after anchor used by
-// ComparisonView and RippleChain's comparative insights.
+// Cyclone Harold, April 2020: the before/after anchor for this page.
 export const EVENT_YEAR = 2020
 
-// Metric definitions used by RippleChain and ComparisonView.
 // Filenames match data-pipeline/clean_data.py's DATASETS dict.
 //
-// chartType: 'bar' for metrics with gaps in the year range (a line
-// would imply a trend across years never measured), 'line' for
-// continuous yearly data, 'area' when the drop in volume itself is
-// the point (tourist arrivals).
+// chartType: 'bar' where the year range has gaps, since a line would imply a
+// trend across years never measured; 'line' for continuous data; 'area' where
+// the drop in volume is itself the point.
 export const METRICS = [
   {
     key: 'affected_persons',

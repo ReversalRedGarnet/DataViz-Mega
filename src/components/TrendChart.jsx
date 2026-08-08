@@ -4,20 +4,17 @@ import { useTheme } from '../hooks/useTheme.jsx'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderMetricChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 
-// One "selected nations, over time" chart card: heading, chart or a
-// NoDataNote placeholder, a missing-nations note, and the matching
-// sr-only data table. RippleChain/DroughtTrends/SeaLevelTrends each
-// render 1-5 of these against renderMetricChart -- the metric config
-// and row data differ per hazard, the card doesn't.
+// One "selected nations, over time" chart card: heading, chart or placeholder,
+// a missing-nations note, and the matching sr-only table. Every trends section
+// renders these; only the metric config and the rows differ.
 //
 // Props:
-//   label -- chart heading, sr-only caption, and svg aria-label
+//   label -- heading, sr-only caption, and svg aria-label
 //   allRows, nations, valueField, chartType, format, yTickFormat --
 //     forwarded to renderMetricChart
-//   emptyNote -- text for the "no data at all" placeholder; every
-//     current caller uses the same wording, so this defaults to it
+//   emptyNote -- "no data at all" copy; every caller uses the default
 //   showTooltip, hideTooltip
-//   index -- stagger delay for the shared entrance animation
+//   index -- entrance stagger
 //   className -- layout hook (e.g. sm:col-span-2 for an odd one out)
 export default function TrendChart({
   label,

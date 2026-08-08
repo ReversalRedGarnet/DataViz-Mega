@@ -8,20 +8,15 @@ import { METRICS, REFERENCE_YEAR } from '../utils/seaLevelExposureMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
 import { missingNations, snapshotRowsByMetric } from '../utils/rows.js'
 
-// Regional snapshot of who actually lives within reach of sea level --
-// complements SeaLevelSnapshot.jsx's mm/year trend with a different
-// real question: not how fast the ocean is rising, but how many
-// people already live low enough for it to matter. Real Pacific
-// Community population-grid and elevation modelling (see
-// clean_sea_level_exposure_data.py), not the tide-gauge data the rest
-// of this page uses -- a second, independent dataset, not a derived
-// number.
+// Who actually lives within reach of sea level -- a different question from
+// SeaLevelSnapshot's mm/year trend, answered by a second, independent dataset
+// (SPC's population-grid and elevation modelling), not derived from the tide
+// gauges.
 //
 // Props:
 //   data -- { series, notes }, from useSeaLevelExposureData()
-//   nations -- the page's own nation list (array of { name, ... }),
-//     read here only for display order
-//   style -- forwarded to the underlying Section
+//   nations -- the page's nation list, read here only for display order
+//   style -- forwarded to Section
 export default function SeaLevelExposure({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
   const nationNames = useMemo(() => nations.map((n) => n.name), [nations])

@@ -1,9 +1,7 @@
 import { useState } from 'react'
 
-// Selection state for "pick up to two nations to compare" -- shared by
-// MapView, RippleChain, and ComparisonView via App.jsx. Pulled out into
-// its own hook so App.jsx stays thin and this logic is testable on its
-// own.
+// "Pick up to two nations to compare" -- owned by each hazard page and passed
+// down to its map and comparison sections.
 export function useSelection() {
   const [selected, setSelected] = useState([])
 

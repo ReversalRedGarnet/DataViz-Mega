@@ -10,26 +10,19 @@ import TrendChart from './TrendChart.jsx'
 import InsightsPanel from './InsightsPanel.jsx'
 import Tooltip from './Tooltip.jsx'
 
-// The connected sequence view: one small chart per stage of the chain,
-// filtered to whichever nation(s) are selected on the map. Chart
-// implementation: D3 only -- no Plotly / Observable Plot, per the
-// locked stack in README.md. Which chart *type* each metric uses (bar/
-// line/area) is decided in metrics.js, based on how complete each
-// metric's data actually is.
+// One small chart per stage of the chain, filtered to the selected nations.
+// Which chart type each metric gets is decided in metrics.js, based on how
+// complete that metric's data actually is.
 //
 // Props:
 //   data -- { [metricKey]: Array<{ nation, year, [field]: number }> }
-//   selectedNations -- ordered array of nation names selected in
-//     MapView. Order matters here: it drives which colour each nation
-//     gets, kept in sync with the map's numbered badges.
-//   style -- forwarded to the underlying Section, used by App.jsx to
-//     stagger each section's entrance on first load
+//   selectedNations -- ordered; order drives colour, matching the map's badges
+//   style -- forwarded to Section (entrance stagger)
 export default function RippleChain({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
-  // Memoised deliberately -- see rowsByMetricForNations' own note: the
-  // tooltip state above lives in this component, so an unmemoised
-  // filter would redraw every chart on every hover.
+  // Memoised deliberately: the tooltip state lives here, so an unmemoised
+  // filter would redraw every chart on every hover. See rows.js.
   const filteredByMetric = useMemo(
     () => rowsByMetricForNations(data, METRICS, selectedNations),
     [data, selectedNations]

@@ -1,22 +1,13 @@
-// Shared section wrapper: semantic <section>, consistent padding, a
-// max-width reading column, and the site's one entrance animation
-// (see .animate-pop-in in index.css).
+// Section wrapper: semantic <section>, consistent padding, a max-width reading
+// column, and the site's one entrance animation (.animate-pop-in, index.css).
 //
-// `tone`: 'plain' is the page's own sand background (most sections),
-// 'panel' is a restrained neutral for the two editorial-aside sections
-// (BigPicture, Compare recovery), 'ink' is Home's hero -- the same
-// dark/light inversion CitationPanel's footer uses, not a new hue.
-// Colour otherwise doesn't tell sections apart -- the PacificBorder
-// divider between them does that (see sectionColorsFor(theme)), so a
-// panel/ink section's background starts and ends exactly at the wave
-// seam rather than a flat cut.
+// `tone` is the background, and must match what the page tells PageSections so
+// the wave divider's seam lands on a real colour change rather than a flat cut.
+// 'plain' is the page background, 'panel' a restrained neutral for editorial
+// asides, 'ink' the inversion Home's hero and the footer use.
 //
-// ink's dark:bg-panel/dark:text-ink pair (not a plain ink/sand flip)
-// matches CitationPanel.jsx's footer fix -- see that file's comment
-// for why an un-overridden bg-ink goes too bright in dark mode. PageHero's
-// own text (kicker/body/cta) uses plain opacity-NN rather than an
-// explicit text-sand/NN, so it inherits this correctly without needing
-// its own dark: overrides.
+// ink's dark: pair is bg-panel/text-ink, not a straight ink/sand flip -- see
+// CitationPanel.jsx for why the flip reads too bright in dark mode.
 const TONES = {
   plain: 'bg-sand',
   panel: 'bg-panel',

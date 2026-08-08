@@ -1,6 +1,6 @@
 import PageHero from '../components/PageHero.jsx'
 import Section from '../components/Section.jsx'
-import PacificBorder from '../components/PacificBorder.jsx'
+import PageSections from '../components/PageSections.jsx'
 import MapView from '../components/MapView.jsx'
 import SeaLevelSnapshot from '../components/SeaLevelSnapshot.jsx'
 import SeaLevelExposure from '../components/SeaLevelExposure.jsx'
@@ -9,25 +9,16 @@ import CitationPanel from '../components/CitationPanel.jsx'
 import { useSelection, selectionAnnouncement } from '../hooks/useSelection.js'
 import { useSeaLevelData } from '../hooks/useSeaLevelData.js'
 import { useSeaLevelExposureData } from '../hooks/useSeaLevelExposureData.js'
-import { useTheme } from '../hooks/useTheme.jsx'
-import { sectionColorsFor } from '../utils/theme.js'
-import { delayStyle } from '../utils/motion.js'
 
-// The ocean rises at close to the same rate everywhere it's measured;
-// what stands in its way is not the same everywhere. Same "shared
-// phenomenon, unequal outcome" structure as CyclonesPage/Hero.jsx and
-// ElNinoDroughtPage.jsx, deliberately -- see the note in
-// src/content/hazards.js.
+// The ocean rises at close to the same rate everywhere it's measured; what
+// stands in its way is not the same everywhere. Same "shared phenomenon,
+// unequal outcome" structure as the other two hazard pages, deliberately --
+// see the note in src/content/hazards.js.
 //
-// Wired to real data as of the "Beyond the Submission" expansion (see
-// README.md): monthly tide-gauge readings from BOM's Pacific Sea
-// Level Monitoring Project (SEAFRAME network), 1992/93-2025, for all
-// six nations (data-pipeline/clean_sea_level_data.py), plus SPC's own
-// population-exposure modelling -- what share of each nation lives
-// within 10m/20m of sea level (clean_sea_level_exposure_data.py).
-// What ISN'T built yet is land area specifically -- SPC's exposure
-// dataset covers population, not land area, so that half of the
-// original "land area and population" gap stays open. See SOURCES.
+// Two independent real datasets here: BOM tide gauges (how fast the water is
+// rising) and SPC's own population-exposure modelling (how many people already
+// live within reach of it). Land area specifically, as distinct from
+// population, isn't available from any source found -- see SOURCES.
 const NATIONS = [
   {
     name: 'Tuvalu',
@@ -86,17 +77,10 @@ const SOURCES = [
   },
 ]
 
-const SECTION_TONES = ['plain', 'plain', 'panel', 'panel', 'plain', 'panel']
-const FOOTER_TONE = 'ink'
-
-
 export default function SeaLevelRisePage() {
   const { selected, toggle, clear } = useSelection()
   const data = useSeaLevelData()
   const exposureData = useSeaLevelExposureData()
-  const { theme } = useTheme()
-  const colors = sectionColorsFor(theme)
-  const [heroTone, glanceTone, snapshotTone, exposureTone, mapTone, compareTone] = SECTION_TONES
 
   return (
     <>
@@ -104,100 +88,105 @@ export default function SeaLevelRisePage() {
         {selectionAnnouncement(selected)}
       </div>
 
-      <div id="top">
-        <PageHero
-          kicker="Decades of tide-gauge record · one rising ocean, unequal exposure."
-          headline="The ocean is rising at close to the same rate everywhere it's measured. What's in its way is not the same everywhere."
-          body="Sea level rise in the Pacific is driven by the same two global mechanisms everywhere: seawater expanding as it warms, and land ice melting into the ocean. Tide gauges and satellite altimetry track the result in millimetres per year, averaged over decades to separate the underlying trend from tides, storms, and shorter cycles like El Niño. The rate itself is close to uniform across the open Pacific. What differs enormously is what stands in its way: high volcanic terrain gives a nation land to retreat to; a coral atoll rarely rises more than a few metres above sea level anywhere within its borders."
-          cta="Scroll to explore the nations being tracked here."
-          style={delayStyle(0)}
-        />
-      </div>
-
-      <PacificBorder colorAbove={colors[heroTone]} colorBelow={colors[glanceTone]} />
-
-      <div id="glance">
-        <Section style={delayStyle(1)}>
-          <div className="mx-auto max-w-3xl">
-            <h2 className="mb-2 text-xl font-semibold">Sea Level Rise at a Glance</h2>
-            <div className="max-w-2xl space-y-3 text-sm opacity-80">
-              <p>
-                Unlike a cyclone or an El Niño drought, sea level rise has no single event date — it's a continuous
-                trend, measured in millimetres per year against a multi-decade baseline. The nations in this set are
-                chosen because they're part of long-running, quality-controlled tide gauge networks, not because
-                they've all had one dramatic flooding event to point to.
-              </p>
-              <p>
-                Elevation is the variable that changes everything here. A nation whose highest point is a few metres
-                above sea level has categorically less room to adapt in place than a nation with interior highlands —
-                regardless of how similar the millimetre-per-year trend is between them.
-              </p>
-              <p className="opacity-70">
-                The charts below are real: monthly tide-gauge readings from BOM's Pacific Sea Level Monitoring
-                Project, one station per nation, most running from the early-to-mid 1990s to the present, plus how
-                much of each nation's population actually lives within reach of that rising water. Each station's
-                own local benchmark is arbitrary, so raw readings aren't compared directly across nations here — see
-                the footer for how that's handled. Land area specifically (as distinct from population) remains a
-                "next in the pipeline" item.
-              </p>
-            </div>
-          </div>
-        </Section>
-      </div>
-
-      <PacificBorder colorAbove={colors[glanceTone]} colorBelow={colors[snapshotTone]} />
-
-      <div id="snapshot">
-        <SeaLevelSnapshot data={data} nations={NATIONS} style={delayStyle(2)} />
-      </div>
-
-      <PacificBorder colorAbove={colors[snapshotTone]} colorBelow={colors[exposureTone]} />
-
-      <div id="exposure">
-        <SeaLevelExposure data={exposureData} nations={NATIONS} style={delayStyle(3)} />
-      </div>
-
-      <PacificBorder colorAbove={colors[exposureTone]} colorBelow={colors[mapTone]} />
-
-      <div id="map">
-        <MapView nations={NATIONS} selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(4)} />
-      </div>
-
-      <PacificBorder colorAbove={colors[mapTone]} colorBelow={colors[compareTone]} />
-
-      <div id="trends">
-        <SeaLevelTrends data={data} selectedNations={selected} style={delayStyle(5)} />
-      </div>
-
-      <PacificBorder colorAbove={colors[compareTone]} colorBelow={colors[FOOTER_TONE]} />
-
-      <div id="sources">
-        <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(6)}>
-          <p className="text-sand/85 dark:text-ink/85">
-            Each tide-gauge station's raw "mean sea level" reading is relative to that station's own local benchmark,
-            not a shared regional or global datum — a station's absolute metre value says nothing about how its
-            ocean compares to another station's. To keep nations honestly comparable, the trend chart above shows
-            each station's own rate of change (millimetres/year, fitted by ordinary least squares across its full
-            record), and the year-by-year chart shows each station's own reading as an anomaly relative to its own
-            long-term average, not a raw metre figure.
-          </p>
-          <p className="text-sand/85 dark:text-ink/85 mt-3">
-            Months with fewer than half their expected tide-gauge readings, and calendar years with fewer than nine
-            reliable months, are excluded from the annual figures so a partially-recorded month or year can't skew
-            the average.
-          </p>
-          <p className="text-sand/85 dark:text-ink/85 mt-3">
-            The population-exposure figures come from the Pacific Community's own population-grid and elevation
-            modelling, not from the tide gauges — a second, independent dataset, not a number derived from the first.
-            These estimates are revised periodically rather than measured continuously, so the site shows only the
-            latest year rather than a year-by-year trend that would overstate how precisely this changes year to
-            year. Land area specifically (separate from population) isn't wired up yet.
-          </p>
-          <p className="text-sand/85 dark:text-ink/85 mt-3">
-            This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
-          </p>
-        </CitationPanel>
-      </div>
+      <PageSections
+        sections={[
+          {
+            id: 'top',
+            tone: 'plain',
+            element: (
+              <PageHero
+                kicker="Decades of tide-gauge record · one rising ocean, unequal exposure."
+                headline="The ocean is rising at close to the same rate everywhere it's measured. What's in its way is not the same everywhere."
+                body="Sea level rise in the Pacific is driven by the same two global mechanisms everywhere: seawater expanding as it warms, and land ice melting into the ocean. Tide gauges and satellite altimetry track the result in millimetres per year, averaged over decades to separate the underlying trend from tides, storms, and shorter cycles like El Niño. The rate itself is close to uniform across the open Pacific. What differs enormously is what stands in its way: high volcanic terrain gives a nation land to retreat to; a coral atoll rarely rises more than a few metres above sea level anywhere within its borders."
+                cta="Scroll to explore the nations being tracked here."
+              />
+            ),
+          },
+          {
+            id: 'glance',
+            tone: 'plain',
+            element: (
+              <Section>
+                <div className="mx-auto max-w-3xl">
+                  <h2 className="mb-2 text-xl font-semibold">Sea Level Rise at a Glance</h2>
+                  <div className="max-w-2xl space-y-3 text-sm opacity-80">
+                    <p>
+                      Unlike a cyclone or an El Niño drought, sea level rise has no single event date — it's a continuous
+                      trend, measured in millimetres per year against a multi-decade baseline. The nations in this set are
+                      chosen because they're part of long-running, quality-controlled tide gauge networks, not because
+                      they've all had one dramatic flooding event to point to.
+                    </p>
+                    <p>
+                      Elevation is the variable that changes everything here. A nation whose highest point is a few metres
+                      above sea level has categorically less room to adapt in place than a nation with interior highlands —
+                      regardless of how similar the millimetre-per-year trend is between them.
+                    </p>
+                    <p className="opacity-70">
+                      The charts below are real: monthly tide-gauge readings from BOM's Pacific Sea Level Monitoring
+                      Project, one station per nation, most running from the early-to-mid 1990s to the present, plus how
+                      much of each nation's population actually lives within reach of that rising water. Each station's
+                      own local benchmark is arbitrary, so raw readings aren't compared directly across nations here — see
+                      the footer for how that's handled. Land area specifically (as distinct from population) remains a
+                      "next in the pipeline" item.
+                    </p>
+                  </div>
+                </div>
+              </Section>
+            ),
+          },
+          {
+            id: 'snapshot',
+            tone: 'panel',
+            element: <SeaLevelSnapshot data={data} nations={NATIONS} />,
+          },
+          {
+            id: 'exposure',
+            tone: 'panel',
+            element: <SeaLevelExposure data={exposureData} nations={NATIONS} />,
+          },
+          {
+            id: 'map',
+            tone: 'plain',
+            element: <MapView nations={NATIONS} selected={selected} onToggle={toggle} onClear={clear} />,
+          },
+          {
+            id: 'trends',
+            tone: 'panel',
+            element: <SeaLevelTrends data={data} selectedNations={selected} />,
+          },
+          {
+            id: 'sources',
+            tone: 'ink',
+            element: (
+              <CitationPanel sources={SOURCES} aboutTitle="About this page">
+                <p className="text-sand/85 dark:text-ink/85">
+                  Each tide-gauge station's raw "mean sea level" reading is relative to that station's own local benchmark,
+                  not a shared regional or global datum — a station's absolute metre value says nothing about how its
+                  ocean compares to another station's. To keep nations honestly comparable, the trend chart above shows
+                  each station's own rate of change (millimetres/year, fitted by ordinary least squares across its full
+                  record), and the year-by-year chart shows each station's own reading as an anomaly relative to its own
+                  long-term average, not a raw metre figure.
+                </p>
+                <p className="text-sand/85 dark:text-ink/85 mt-3">
+                  Months with fewer than half their expected tide-gauge readings, and calendar years with fewer than nine
+                  reliable months, are excluded from the annual figures so a partially-recorded month or year can't skew
+                  the average.
+                </p>
+                <p className="text-sand/85 dark:text-ink/85 mt-3">
+                  The population-exposure figures come from the Pacific Community's own population-grid and elevation
+                  modelling, not from the tide gauges — a second, independent dataset, not a number derived from the first.
+                  These estimates are revised periodically rather than measured continuously, so the site shows only the
+                  latest year rather than a year-by-year trend that would overstate how precisely this changes year to
+                  year. Land area specifically (separate from population) isn't wired up yet.
+                </p>
+                <p className="text-sand/85 dark:text-ink/85 mt-3">
+                  This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
+                </p>
+              </CitationPanel>
+            ),
+          },
+        ]}
+      />
     </>
   )
 }

@@ -8,25 +8,18 @@ import { TREND_METRIC } from '../utils/seaLevelMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
 import { byNationOrder, missingNations } from '../utils/rows.js'
 
-// Computed once at module load, not inline in JSX -- see
-// DroughtSnapshot.jsx for why an inline d3.format() call would cause
-// the chart to fully redraw on every hover/touch.
+// Module level -- see DroughtSnapshot.jsx.
 const YTICK_FORMAT = d3.format('.1f')
 
-// Regional snapshot for Sea Level Rise -- one bar per nation, but
-// unlike DroughtSnapshot.jsx/BigPicture.jsx there's no shared
-// reference YEAR to anchor this to (sea level rise has no event and
-// no cycle -- see README.md's framing for this page). The one number
-// that IS safe to put side by side across nations is each station's
-// own long-term trend in mm/year (see clean_sea_level_data.py for why
-// raw metres aren't), so that's what this snapshot shows instead of a
-// same-year comparison.
+// Regional snapshot for Sea Level Rise. No reference year to anchor to -- sea
+// level rise has no event and no cycle -- so this shows the one figure that IS
+// safe to compare across stations: each one's own mm/year trend. Raw metres
+// aren't comparable; see clean_sea_level_data.py.
 //
 // Props:
 //   data -- { series, trend }, from useSeaLevelData()
-//   nations -- the page's own nation list (array of { name, ... }),
-//     read here only for display order
-//   style -- forwarded to the underlying Section
+//   nations -- the page's nation list, read here only for display order
+//   style -- forwarded to Section
 export default function SeaLevelSnapshot({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 

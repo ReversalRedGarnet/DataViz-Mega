@@ -8,29 +8,19 @@ import { METRICS, REFERENCE_YEAR } from '../utils/droughtMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
 import { missingNations, snapshotRowsByMetric } from '../utils/rows.js'
 
-// Computed once at module load, not inside the component -- d3.format
-// returns a brand-new function object on every call, even with the
-// same string. Calling it inline in JSX would hand MetricSnapshotChart
-// a "changed" yTickFormat prop (by reference) on every re-render,
-// including the ones triggered by hovering the chart's own tooltip --
-// which would re-trigger its draw effect and replay the whole chart's
-// entrance animation on every hover/touch.
+// Module level, not inline in JSX: d3.format returns a new function object
+// every call, so an inline one would look like a changed prop on every
+// re-render -- including tooltip hovers -- and replay the entrance animation.
 const YTICK_FORMAT = d3.format('.2f')
 
-// Regional snapshot for the El Nino & Drought page -- same job
-// BigPicture's snapshot half plays for Cyclones (all nations, one
-// fixed moment, side by side), kept as its own small component
-// instead of extending BigPicture.jsx because there's no equivalent
-// here to that component's stat-tile half: Cyclone Harold has a
-// single "what happened" event to summarise in numbers; a recurring
-// 64-year climate cycle doesn't reduce to four tiles the same way.
+// Regional snapshot: all nations, one fixed moment, side by side. Separate
+// from BigPicture's version because a recurring 64-year cycle has no equivalent
+// of that component's "what happened" stat tiles.
 //
 // Props:
 //   data -- { [metricKey]: rows }, from useMetricData(METRICS)
-//   nations -- the page's own nation list (array of { name, ... }),
-//     read here only for display order, matching how MapView already
-//     receives its own nations prop from the same page
-//   style -- forwarded to the underlying Section
+//   nations -- the page's nation list, read here only for display order
+//   style -- forwarded to Section
 export default function DroughtSnapshot({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
   const nationNames = useMemo(() => nations.map((n) => n.name), [nations])

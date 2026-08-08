@@ -2,12 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { PAGE_SECTIONS } from '../content/pageSections.js'
 
-// Same stroke convention as MapControlIcon.jsx/ThemeToggle.jsx (2.25,
-// currentColor). Three bars morphing into an X on open, drawn as one
-// component with `open` swapping the middle bar's opacity and the
-// outer two bars' rotation/position, rather than two separate icons --
-// the morph itself is a small, free bit of feedback that the button
-// did something.
+// Three bars morphing into an X, drawn as one component rather than two icons
+// so the morph itself gives feedback that the button did something.
 function HamburgerIcon({ open }) {
   return (
     <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" aria-hidden="true">
@@ -53,27 +49,18 @@ function HamburgerIcon({ open }) {
   )
 }
 
-// In-page "jump to section" menu -- a real anchor link per section
-// (href="#id"), not a JS-driven scroll: native fragment navigation
-// already gets a smooth scroll from index.css's scroll-behavior rule
-// and the right header-clearance offset from its scroll-padding-top
-// rule (both gated correctly on prefers-reduced-motion / kept in sync
-// with Header's real height -- see index.css and Header.jsx), and
-// it's a real, shareable, bookmarkable URL for free. Renders nothing
-// on a page with no registered sections (e.g. a 404) rather than an
-// empty, useless menu.
+// In-page "jump to section" menu. Real anchor links, not a JS scroll: index.css
+// already gives fragment navigation a smooth scroll and the right header
+// clearance, and this way each section is a shareable URL. Renders nothing on a
+// page with no registered sections.
 export default function SectionNav() {
   const { pathname } = useLocation()
   const sections = PAGE_SECTIONS[pathname]
   const [open, setOpen] = useState(false)
   const containerRef = useRef(null)
 
-  // Closing on navigation matters even though clicking a link inside
-  // the menu already triggers a route-internal scroll, not a real
-  // navigation -- someone could still open this menu, then use the
-  // sitewide nav row (or browser back/forward) instead, and a stale
-  // open dropdown listing the PREVIOUS page's sections would be
-  // actively wrong, not just untidy.
+  // Someone can open this menu and then navigate by the site nav or browser
+  // back button, leaving a dropdown listing the previous page's sections.
   useEffect(() => {
     setOpen(false)
   }, [pathname])

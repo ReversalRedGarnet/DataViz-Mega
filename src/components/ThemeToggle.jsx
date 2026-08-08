@@ -1,13 +1,8 @@
 import { useTheme } from '../hooks/useTheme.jsx'
 
-// Same stroke weight/colour convention as MapControlIcon.jsx (2.25,
-// currentColor) so this reads as part of the same custom icon set
-// rather than a different one bolted on. Shows the icon for the mode
-// a click will SWITCH TO (a moon while in light mode, a sun while in
-// dark mode) -- the more common of the two conventions for a toggle
-// like this, and the one that answers "what happens if I press this"
-// rather than "what state am I in", which the button's own visual
-// state (whichever icon is currently showing) already answers anyway.
+// Same stroke convention as MapControlIcon.jsx. Shows the mode a click
+// switches TO -- answering "what does this do" rather than "what state am I
+// in", which the rest of the page already answers.
 const STROKE_WIDTH = 2.25
 
 function SunIcon() {

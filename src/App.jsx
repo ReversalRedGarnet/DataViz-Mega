@@ -10,7 +10,16 @@ import { useScrollToTopOnNavigate } from './hooks/useScrollToTopOnNavigate.js'
 import { ThemeProvider } from './hooks/useTheme.jsx'
 import { HAZARDS } from './content/hazards.js'
 
-// Shared application layout.
+// The other half of the HAZARDS registry: content/hazards.js says which
+// hazards exist and where they live, this says what renders there. A hazard
+// added to the registry without an entry here falls through to NotFound rather
+// than rendering a blank route.
+const HAZARD_PAGES = {
+  cyclones: CyclonesPage,
+  'el-nino-drought': ElNinoDroughtPage,
+  'sea-level-rise': SeaLevelRisePage,
+}
+
 function AppShell() {
   const [headerHeight, setHeaderHeight] = useState(0)
 
@@ -44,34 +53,16 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          {HAZARDS.map((hazard) => (
-            <Route
-              key={hazard.slug}
-              path={hazard.path}
-              element={<HazardRoute slug={hazard.slug} />}
-            />
-          ))}
+          {HAZARDS.map((hazard) => {
+            const Page = HAZARD_PAGES[hazard.slug]
+            return <Route key={hazard.slug} path={hazard.path} element={Page ? <Page /> : <NotFound />} />
+          })}
 
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </>
   )
-}
-
-// Maps hazard slugs to page components.
-const HAZARD_PAGES = {
-  cyclones: CyclonesPage,
-  'el-nino-drought': ElNinoDroughtPage,
-  'sea-level-rise': SeaLevelRisePage,
-}
-
-function HazardRoute({ slug }) {
-  const PageComponent = HAZARD_PAGES[slug]
-
-  if (!PageComponent) return <NotFound />
-
-  return <PageComponent />
 }
 
 export default function App() {

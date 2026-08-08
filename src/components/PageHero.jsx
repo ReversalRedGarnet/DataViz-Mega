@@ -1,8 +1,7 @@
 import Section from './Section.jsx'
 
-// The site's one hero pattern -- every story page (and Home) shares
-// this instead of three near-identical copies drifting apart. Hero.jsx
-// is a thin wrapper around this with Cyclone Harold's copy hardcoded.
+// The site's one hero pattern, shared by every page. Hero.jsx is this with
+// Cyclone Harold's copy hardcoded.
 //
 // Props:
 //   kicker -- short uppercase framing line above the headline
@@ -17,11 +16,9 @@ import Section from './Section.jsx'
 export default function PageHero({ kicker, headline, body, cta, tone = 'plain', headlineClassName, style }) {
   return (
     <Section tone={tone} className="text-center" style={style}>
-      {/* text-center repeated directly on each <p>, not just relied on
-          via Section's inherited value -- index.css's `p { text-align:
-          justify }` rule beats an inherited alignment even at low
-          specificity, so without this these single-line paragraphs
-          would silently left-align instead of staying centered. */}
+      {/* text-center repeated on each <p>: index.css's `p { text-align:
+          justify }` beats an alignment inherited from Section, so without it
+          these paragraphs silently left-align. */}
       <p className="mx-auto max-w-2xl text-center text-sm font-semibold uppercase tracking-wide opacity-70">
         {kicker}
       </p>

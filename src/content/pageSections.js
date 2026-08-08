@@ -1,12 +1,7 @@
-// Per-page in-page section anchors -- read by SectionNav.jsx (the
-// hamburger menu in Header.jsx) to build its jump-to-section list.
-// Keyed by pathname, same "one registry, read by more than one
-// component" pattern as hazards.js.
-//
-// Each id here must match the id= on the wrapping element around that
-// section in the corresponding page file exactly (see each page's own
-// <div id="..."> wrappers) -- there's no runtime check tying the two
-// together, so a renamed id on one side needs the same rename here.
+// In-page section anchors per pathname, read by SectionNav to build its
+// jump-to menu. Each id must match the `id` on the matching entry in that
+// page's PageSections list -- nothing checks this at runtime, so renaming one
+// side means renaming the other.
 export const PAGE_SECTIONS = {
   '/': [
     { id: 'top', label: 'Overview' },

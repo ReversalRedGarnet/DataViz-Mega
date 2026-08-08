@@ -60,27 +60,27 @@ export default function StormProfile({ style }) {
       <div ref={containerRef} className="relative mx-auto max-w-3xl">
         <h2 className="mb-2 text-xl font-semibold">Cyclone Harold at a Glance</h2>
 
-<div className="max-w-2xl space-y-3 text-sm opacity-80">
-  <p>
-    Tropical Cyclone Harold was one of the strongest storms of the 2020 South Pacific
-    cyclone season. Between 2 and 10 April 2020, it tracked across Solomon Islands,
-    Vanuatu, Fiji, and Tonga, bringing destructive winds, heavy rainfall, storm surges,
-    and widespread flooding.
-  </p>
+        <div className="max-w-2xl space-y-3 text-sm opacity-80">
+          <p>
+            Tropical Cyclone Harold was one of the strongest storms of the 2020 South Pacific
+            cyclone season. Between 2 and 10 April 2020, it tracked across Solomon Islands,
+            Vanuatu, Fiji, and Tonga, bringing destructive winds, heavy rainfall, storm surges,
+            and widespread flooding.
+          </p>
 
-  <p>
-    Although Harold was the same weather system throughout its journey, its intensity
-    changed over time. Some countries experienced a direct Category 5 landfall, while
-    others encountered a weaker system or were affected primarily by rough seas and
-    coastal flooding.
-  </p>
+          <p>
+            Although Harold was the same weather system throughout its journey, its intensity
+            changed over time. Some countries experienced a direct Category 5 landfall, while
+            others encountered a weaker system or were affected primarily by rough seas and
+            coastal flooding.
+          </p>
 
-  <p>
-    The chart below compares Cyclone Harold's strength at its closest approach to each
-    nation against the reported loss of life. It introduces an important observation:
-    stronger storms do not always produce the greatest human impact.
-  </p>
-</div>
+          <p>
+            The chart below compares Cyclone Harold's strength at its closest approach to each
+            nation against the reported loss of life. It introduces an important observation:
+            stronger storms do not always produce the greatest human impact.
+          </p>
+        </div>
 
         <svg
           ref={ref}
@@ -90,11 +90,11 @@ export default function StormProfile({ style }) {
         />
 
         <p className="mt-3 max-w-2xl text-sm font-medium">
-  One of the most striking findings is that the cyclone's deadliest single event occurred
-  while Harold was at its weakest documented phase. Twenty-seven people lost their lives
-  when the passenger ferry <em>MV Taimareho</em> was overwhelmed off Solomon Islands—
-  more than the combined death toll recorded in Vanuatu, Fiji, and Tonga.
-</p>
+          One of the most striking findings is that the cyclone's deadliest single event occurred
+          while Harold was at its weakest documented phase. Twenty-seven people lost their lives
+          when the passenger ferry <em>MV Taimareho</em> was overwhelmed off Solomon Islands&mdash;
+          more than the combined death toll recorded in Vanuatu, Fiji, and Tonga.
+        </p>
 
         {/* Screen-reader-only data table -- same pattern as RippleChain:
             the chart above conveys the shape, this gives the same

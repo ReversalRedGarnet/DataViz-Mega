@@ -1,18 +1,10 @@
-// Site footer: data sources, plus copyright and a plain-language data
-// disclaimer. One <footer>, not two, so screen readers see a single
-// "contentinfo" landmark.
+// Site footer: sources, copyright, and a plain-language data disclaimer.
 //
-// bg-ink/text-sand rather than a lighter panel with low-opacity text
-// (a common way small print quietly drops below WCAG's contrast
-// minimum): reads as a clear, intentional close to the page in light
-// mode. In dark mode this gets an explicit dark:bg-panel/dark:text-ink
-// override instead of letting the plain ink/sand flip carry it: ink
-// becomes the LIGHT tone in dark mode (see index.css's .dark block),
-// so an un-overridden bg-ink would flip the footer to a near-white
-// panel -- correct by the "contrasts with the page" logic, but too
-// bright in practice (direct feedback). dark:bg-panel keeps the same
-// "subtly distinct from the page" relationship panel already has to
-// sand, instead of a stark inversion.
+// bg-ink/text-sand rather than a light panel with low-opacity small print,
+// which is a common way footnotes quietly drop below WCAG contrast. In dark
+// mode ink becomes the LIGHT tone, so an un-overridden bg-ink would flip the
+// footer to a near-white panel -- correct by contrast logic, too bright in
+// practice. dark:bg-panel keeps panel's existing relationship to the page.
 //
 // Props:
 //   sources -- array of { label, url }

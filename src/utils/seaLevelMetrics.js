@@ -1,10 +1,8 @@
-// Metric definitions for the Sea Level Rise page. Filenames match
-// clean_sea_level_data.py's output.
+// Filenames match clean_sea_level_data.py's output.
 //
-// The time-series metric is an ANOMALY, not a raw reading: each tide
-// gauge's raw metres are relative to its own local benchmark, so raw
-// values aren't comparable across stations -- see
-// clean_sea_level_data.py for the full reasoning.
+// The time series is an ANOMALY, not a raw reading: each gauge's metres are
+// relative to its own local benchmark, so raw values don't compare across
+// stations. See clean_sea_level_data.py.
 export const METRICS = [
   {
     key: 'sea_level_anomaly',
@@ -16,9 +14,7 @@ export const METRICS = [
   },
 ]
 
-// A single derived number per nation (mm/year via OLS -- see
-// clean_sea_level_data.py), not a year-by-year series, so it's kept
-// separate from METRICS above.
+// One derived number per nation (mm/year via OLS), not a series.
 export const TREND_METRIC = {
   file: 'sea_level_trend.json',
   field: 'trend_mm_per_year',

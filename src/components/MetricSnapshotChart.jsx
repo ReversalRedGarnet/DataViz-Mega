@@ -4,25 +4,21 @@ import { useTheme } from '../hooks/useTheme.jsx'
 import { resetSvg } from '../utils/d3helpers.js'
 import { renderSnapshotChart, CHART_WIDTH, CHART_HEIGHT } from '../utils/chartRenderers.jsx'
 
-// One "all nations, one moment" bar chart card: heading, chart or a
-// NoDataNote placeholder, a missing-nations note, and the matching
-// sr-only data table. BigPicture/DroughtSnapshot/SeaLevelSnapshot each
-// render 1-5 of these -- the copy (labels, notes) and the row data
-// differ per hazard, but the card itself doesn't, so this is the one
-// place its rendering and D3 wiring live.
+// One "all nations, one moment" bar chart card: heading, chart or placeholder,
+// a missing-nations note, and the matching sr-only table. Every snapshot
+// section renders these; only the copy and the rows differ.
 //
 // Props:
-//   label -- chart heading / sr-only table caption; omit for a layout
-//     where the section's own <h2> already names the one chart (see
-//     SeaLevelSnapshot.jsx)
-//   ariaLabel -- the chart's own aria-label (label plus which moment
-//     is being compared, since the label alone doesn't say when)
+//   label -- heading and sr-only caption; omit where the section's own <h2>
+//     already names the single chart
+//   ariaLabel -- label plus which moment is being compared, since the label
+//     alone doesn't say when
 //   rows -- [{ nation, value }]
-//   nationsMissing -- nation names with no row for this chart
+//   nationsMissing -- nation names with no row here
 //   missingNote, emptyNote -- copy for the two NoDataNote states
 //   format, yTickFormat -- forwarded to renderSnapshotChart
 //   showTooltip, hideTooltip
-//   index -- stagger delay for the shared entrance animation
+//   index -- entrance stagger
 //   className -- layout hook (e.g. sm:col-span-2 for an odd one out)
 export default function MetricSnapshotChart({
   label,

@@ -1,8 +1,6 @@
 import PageHero from './PageHero.jsx'
 
-// Cyclone Harold's hero copy, unchanged from before this became a
-// wrapper around the shared PageHero pattern (see PageHero.jsx) --
-// CyclonesPage.jsx still just renders <Hero style={...} />.
+// Cyclone Harold's hero copy, on the shared PageHero pattern.
 export default function Hero({ style }) {
   return (
     <PageHero

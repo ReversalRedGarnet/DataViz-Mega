@@ -1,18 +1,11 @@
 import { Link } from 'react-router-dom'
 import Section from '../components/Section.jsx'
 
-// Catch-all route. Kept in the site's own voice (plain, matter-of-fact,
-// no dead-end) rather than a generic framework default -- see
-// "Treat failure and emptiness as moments for direction, not mood" in
-// the design notes: says what happened, offers the one useful next
-// step, nothing more.
+// Catch-all route: says what happened, offers the one useful next step.
 export default function NotFound() {
   return (
     <Section className="text-center">
-      {/* text-center repeated directly on the <p>s -- see the matching
-          comment in PageHero.jsx for why relying on the ancestor's
-          text-center alone isn't enough once index.css's global
-          `p { text-align: justify }` rule is in play. */}
+      {/* text-center repeated on the <p>s -- see PageHero.jsx. */}
       <p className="mx-auto max-w-2xl text-center text-sm font-semibold uppercase tracking-wide opacity-70">404</p>
       <h1 className="mx-auto mt-3 max-w-2xl text-3xl font-bold tracking-tight">This page doesn't exist.</h1>
       <p className="mx-auto mt-5 max-w-xl text-center text-lg opacity-80">
