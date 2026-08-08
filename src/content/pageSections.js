@@ -34,6 +34,7 @@ export const PAGE_SECTIONS = {
     { id: 'top', label: 'Overview' },
     { id: 'glance', label: 'At a Glance' },
     { id: 'snapshot', label: 'Regional Snapshot' },
+    { id: 'exposure', label: 'Population Exposure' },
     { id: 'map', label: 'Explore the Map' },
     { id: 'trends', label: 'Sea Level Trends' },
     { id: 'sources', label: 'Sources' },

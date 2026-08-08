@@ -3,10 +3,12 @@ import Section from '../components/Section.jsx'
 import PacificBorder from '../components/PacificBorder.jsx'
 import MapView from '../components/MapView.jsx'
 import SeaLevelSnapshot from '../components/SeaLevelSnapshot.jsx'
+import SeaLevelExposure from '../components/SeaLevelExposure.jsx'
 import SeaLevelTrends from '../components/SeaLevelTrends.jsx'
 import CitationPanel from '../components/CitationPanel.jsx'
 import { useSelection } from '../hooks/useSelection.js'
 import { useSeaLevelData } from '../hooks/useSeaLevelData.js'
+import { useSeaLevelExposureData } from '../hooks/useSeaLevelExposureData.js'
 import { useTheme } from '../hooks/useTheme.jsx'
 import { sectionColorsFor } from '../utils/theme.js'
 
@@ -19,14 +21,12 @@ import { sectionColorsFor } from '../utils/theme.js'
 // Wired to real data as of the "Beyond the Submission" expansion (see
 // README.md): monthly tide-gauge readings from BOM's Pacific Sea
 // Level Monitoring Project (SEAFRAME network), 1992/93-2025, for all
-// six nations -- see data-pipeline/clean_sea_level_data.py. What
-// ISN'T built yet is land-area/population exposure -- this page shows
-// the ocean's own measured behaviour at each station, not yet what
-// stands in its way on land. A real source for that has been
-// identified (SPC Statistics for Development Division's Low Elevation
-// Coastal Zone and coastal-proximity datasets, via the same Pacific
-// Data Hub portal the rest of this project already uses) but the
-// actual figures haven't been pulled in yet -- see SOURCES below.
+// six nations (data-pipeline/clean_sea_level_data.py), plus SPC's own
+// population-exposure modelling -- what share of each nation lives
+// within 10m/20m of sea level (clean_sea_level_exposure_data.py).
+// What ISN'T built yet is land area specifically -- SPC's exposure
+// dataset covers population, not land area, so that half of the
+// original "land area and population" gap stays open. See SOURCES.
 const NATIONS = [
   {
     name: 'Tuvalu',
@@ -80,16 +80,12 @@ const SOURCES = [
     url: 'https://pacificdata.org/data/dataset/population-living-in-low-elevation-coastal-zones-0-10m-and-0-20m-above-sea-level-df-pop-lecz',
   },
   {
-    label: 'Coastal proximity of populations (1km / 5km / 10km from coast), Pacific Community (SPC) Statistics for Development Division',
-    url: 'https://sdd.spc.int/mapping',
-  },
-  {
     label: 'Pacific Data Hub (SPC) — Climate Change, Disasters and Risks',
     url: 'https://pacificdata.org/',
   },
 ]
 
-const SECTION_TONES = ['plain', 'plain', 'panel', 'plain', 'panel']
+const SECTION_TONES = ['plain', 'plain', 'panel', 'panel', 'plain', 'panel']
 const FOOTER_TONE = 'ink'
 
 function delayStyle(index) {
@@ -105,9 +101,10 @@ function selectionAnnouncement(selected) {
 export default function SeaLevelRisePage() {
   const { selected, toggle, clear } = useSelection()
   const data = useSeaLevelData()
+  const exposureData = useSeaLevelExposureData()
   const { theme } = useTheme()
   const colors = sectionColorsFor(theme)
-  const [heroTone, glanceTone, snapshotTone, mapTone, compareTone] = SECTION_TONES
+  const [heroTone, glanceTone, snapshotTone, exposureTone, mapTone, compareTone] = SECTION_TONES
 
   return (
     <>
@@ -145,10 +142,11 @@ export default function SeaLevelRisePage() {
               </p>
               <p className="opacity-70">
                 The charts below are real: monthly tide-gauge readings from BOM's Pacific Sea Level Monitoring
-                Project, one station per nation, most running from the early-to-mid 1990s to the present. Each
-                station's own local benchmark is arbitrary, so raw readings aren't compared directly across nations
-                here — see the footer for how that's handled. Land area and coastal population within reach of sea
-                level rise remain a "next in the pipeline" item.
+                Project, one station per nation, most running from the early-to-mid 1990s to the present, plus how
+                much of each nation's population actually lives within reach of that rising water. Each station's
+                own local benchmark is arbitrary, so raw readings aren't compared directly across nations here — see
+                the footer for how that's handled. Land area specifically (as distinct from population) remains a
+                "next in the pipeline" item.
               </p>
             </div>
           </div>
@@ -161,22 +159,28 @@ export default function SeaLevelRisePage() {
         <SeaLevelSnapshot data={data} nations={NATIONS} style={delayStyle(2)} />
       </div>
 
-      <PacificBorder colorAbove={colors[snapshotTone]} colorBelow={colors[mapTone]} />
+      <PacificBorder colorAbove={colors[snapshotTone]} colorBelow={colors[exposureTone]} />
+
+      <div id="exposure">
+        <SeaLevelExposure data={exposureData} nations={NATIONS} style={delayStyle(3)} />
+      </div>
+
+      <PacificBorder colorAbove={colors[exposureTone]} colorBelow={colors[mapTone]} />
 
       <div id="map">
-        <MapView nations={NATIONS} selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(3)} />
+        <MapView nations={NATIONS} selected={selected} onToggle={toggle} onClear={clear} style={delayStyle(4)} />
       </div>
 
       <PacificBorder colorAbove={colors[mapTone]} colorBelow={colors[compareTone]} />
 
       <div id="trends">
-        <SeaLevelTrends data={data} selectedNations={selected} style={delayStyle(4)} />
+        <SeaLevelTrends data={data} selectedNations={selected} style={delayStyle(5)} />
       </div>
 
       <PacificBorder colorAbove={colors[compareTone]} colorBelow={colors[FOOTER_TONE]} />
 
       <div id="sources">
-        <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(5)}>
+        <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(6)}>
           <p className="text-sand/85 dark:text-ink/85">
             Each tide-gauge station's raw "mean sea level" reading is relative to that station's own local benchmark,
             not a shared regional or global datum — a station's absolute metre value says nothing about how its
@@ -191,11 +195,11 @@ export default function SeaLevelRisePage() {
             the average.
           </p>
           <p className="text-sand/85 dark:text-ink/85 mt-3">
-            Land area and population within reach of sea level rise for these nations aren't wired up yet. A real
-            source has been identified — the Pacific Community's own Low Elevation Coastal Zone estimates (population
-            and land area within 0–10m and 0–20m of sea level) and coastal-proximity estimates (population within 1,
-            5, and 10km of the coast), both via the same Pacific Data Hub used elsewhere on this site — but the
-            figures themselves haven't been pulled in yet.
+            The population-exposure figures come from the Pacific Community's own population-grid and elevation
+            modelling, not from the tide gauges — a second, independent dataset, not a number derived from the first.
+            These estimates are revised periodically rather than measured continuously, so the site shows only the
+            latest year rather than a year-by-year trend that would overstate how precisely this changes year to
+            year. Land area specifically (separate from population) isn't wired up yet.
           </p>
           <p className="text-sand/85 dark:text-ink/85 mt-3">
             This site is illustrative and isn't intended to inform policy, funding, or financial decisions.

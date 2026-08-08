@@ -1,0 +1,452 @@
+[
+  {
+    "nation": "Tuvalu",
+    "year": 2010,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2011,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2012,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2013,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2014,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2015,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2016,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2017,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2018,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2019,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2020,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2021,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2022,
+    "pct_within_20m": 98.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2023,
+    "pct_within_20m": 98.0
+  },
+  {
+    "nation": "Tuvalu",
+    "year": 2024,
+    "pct_within_20m": 98.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2010,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2011,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2012,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2013,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2014,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2015,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2016,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2017,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2018,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2019,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2020,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2021,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2022,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2023,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Kiribati",
+    "year": 2024,
+    "pct_within_20m": 99.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2010,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2011,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2012,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2013,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2014,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2015,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2016,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2017,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2018,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2019,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2020,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2021,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2022,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2023,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Marshall Islands",
+    "year": 2024,
+    "pct_within_20m": 100.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2010,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2011,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2012,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2013,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2014,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2015,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2016,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2017,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2018,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2019,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2020,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2021,
+    "pct_within_20m": 78.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2022,
+    "pct_within_20m": 77.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2023,
+    "pct_within_20m": 77.0
+  },
+  {
+    "nation": "Tonga",
+    "year": 2024,
+    "pct_within_20m": 77.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2010,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2011,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2012,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2013,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2014,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2015,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2016,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2017,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2018,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2019,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2020,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2021,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2022,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2023,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Fiji",
+    "year": 2024,
+    "pct_within_20m": 49.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2010,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2011,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2012,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2013,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2014,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2015,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2016,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2017,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2018,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2019,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2020,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2021,
+    "pct_within_20m": 74.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2022,
+    "pct_within_20m": 73.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2023,
+    "pct_within_20m": 73.0
+  },
+  {
+    "nation": "Cook Islands",
+    "year": 2024,
+    "pct_within_20m": 73.0
+  }
+]
