@@ -67,13 +67,13 @@ export default function Home() {
           aboutTitle="About this project"
           style={delayStyle(2)}
         >
-          <p className="text-sand/85">
+          <p className="text-sand/85 dark:text-ink/85">
             Each hazard page lists the specific official sources it draws on, or will draw on, in its own footer —
             this is just the shared starting point. No hazard here uses a single blended "risk" or "suffering" score;
             where indicators are shown, they're shown as raw figures side by side, so a nation's numbers speak for
             themselves rather than being folded into one invented number.
           </p>
-          <p className="text-sand/85 mt-3">
+          <p className="text-sand/85 dark:text-ink/85 mt-3">
             This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
           </p>
         </CitationPanel>

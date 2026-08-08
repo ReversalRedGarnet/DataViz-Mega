@@ -161,17 +161,17 @@ export default function ElNinoDroughtPage() {
 
       <div id="sources">
         <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(5)}>
-          <p className="text-sand/85">
+          <p className="text-sand/85 dark:text-ink/85">
             SPI-12 and SPEI-12 are reported at the admin-1 (state/province) level by the World Bank; the figures
             shown here are an unweighted average across each nation's own admin-1 regions (e.g. Fiji's four
             divisions, Papua New Guinea's 22 provinces), not a separate national calculation. Each year's value is
             December's reading, since a 12-month index already covers the full calendar year ending that month.
           </p>
-          <p className="text-sand/85 mt-3">
+          <p className="text-sand/85 dark:text-ink/85 mt-3">
             Reported drought impact and water-storage capacity for these nations aren't wired up yet — the sources
             listed above are where that indicator, once built, will be drawn from.
           </p>
-          <p className="text-sand/85 mt-3">
+          <p className="text-sand/85 dark:text-ink/85 mt-3">
             This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
           </p>
         </CitationPanel>

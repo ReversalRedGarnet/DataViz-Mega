@@ -20,9 +20,13 @@ import { sectionColorsFor } from '../utils/theme.js'
 // README.md): monthly tide-gauge readings from BOM's Pacific Sea
 // Level Monitoring Project (SEAFRAME network), 1992/93-2025, for all
 // six nations -- see data-pipeline/clean_sea_level_data.py. What
-// ISN'T built yet is land-area-within-two-metres or coastal
-// population exposure -- this page shows the ocean's own measured
-// behaviour at each station, not yet what stands in its way on land.
+// ISN'T built yet is land-area/population exposure -- this page shows
+// the ocean's own measured behaviour at each station, not yet what
+// stands in its way on land. A real source for that has been
+// identified (SPC Statistics for Development Division's Low Elevation
+// Coastal Zone and coastal-proximity datasets, via the same Pacific
+// Data Hub portal the rest of this project already uses) but the
+// actual figures haven't been pulled in yet -- see SOURCES below.
 const NATIONS = [
   {
     name: 'Tuvalu',
@@ -70,6 +74,14 @@ const SOURCES = [
   {
     label: 'Pacific Climate Change Data Portal, Australian Bureau of Meteorology',
     url: 'https://www.bom.gov.au/climate/pccsp/',
+  },
+  {
+    label: 'Population living in Low Elevation Coastal Zones (0–10m / 0–20m above sea level), Pacific Community (SPC) Statistics for Development Division',
+    url: 'https://pacificdata.org/data/dataset/population-living-in-low-elevation-coastal-zones-0-10m-and-0-20m-above-sea-level-df-pop-lecz',
+  },
+  {
+    label: 'Coastal proximity of populations (1km / 5km / 10km from coast), Pacific Community (SPC) Statistics for Development Division',
+    url: 'https://sdd.spc.int/mapping',
   },
   {
     label: 'Pacific Data Hub (SPC) — Climate Change, Disasters and Risks',
@@ -135,8 +147,8 @@ export default function SeaLevelRisePage() {
                 The charts below are real: monthly tide-gauge readings from BOM's Pacific Sea Level Monitoring
                 Project, one station per nation, most running from the early-to-mid 1990s to the present. Each
                 station's own local benchmark is arbitrary, so raw readings aren't compared directly across nations
-                here — see the footer for how that's handled. Land area at risk and coastal population exposure
-                remain a "next in the pipeline" item.
+                here — see the footer for how that's handled. Land area and coastal population within reach of sea
+                level rise remain a "next in the pipeline" item.
               </p>
             </div>
           </div>
@@ -165,7 +177,7 @@ export default function SeaLevelRisePage() {
 
       <div id="sources">
         <CitationPanel sources={SOURCES} aboutTitle="About this page" style={delayStyle(5)}>
-          <p className="text-sand/85">
+          <p className="text-sand/85 dark:text-ink/85">
             Each tide-gauge station's raw "mean sea level" reading is relative to that station's own local benchmark,
             not a shared regional or global datum — a station's absolute metre value says nothing about how its
             ocean compares to another station's. To keep nations honestly comparable, the trend chart above shows
@@ -173,16 +185,19 @@ export default function SeaLevelRisePage() {
             record), and the year-by-year chart shows each station's own reading as an anomaly relative to its own
             long-term average, not a raw metre figure.
           </p>
-          <p className="text-sand/85 mt-3">
+          <p className="text-sand/85 dark:text-ink/85 mt-3">
             Months with fewer than half their expected tide-gauge readings, and calendar years with fewer than nine
             reliable months, are excluded from the annual figures so a partially-recorded month or year can't skew
             the average.
           </p>
-          <p className="text-sand/85 mt-3">
-            Land area within two metres of current sea level and coastal population exposure for these nations
-            aren't wired up yet — the sources listed above are where that indicator, once built, will be drawn from.
+          <p className="text-sand/85 dark:text-ink/85 mt-3">
+            Land area and population within reach of sea level rise for these nations aren't wired up yet. A real
+            source has been identified — the Pacific Community's own Low Elevation Coastal Zone estimates (population
+            and land area within 0–10m and 0–20m of sea level) and coastal-proximity estimates (population within 1,
+            5, and 10km of the coast), both via the same Pacific Data Hub used elsewhere on this site — but the
+            figures themselves haven't been pulled in yet.
           </p>
-          <p className="text-sand/85 mt-3">
+          <p className="text-sand/85 dark:text-ink/85 mt-3">
             This site is illustrative and isn't intended to inform policy, funding, or financial decisions.
           </p>
         </CitationPanel>

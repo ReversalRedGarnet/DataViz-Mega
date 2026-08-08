@@ -68,7 +68,7 @@ All sources were exported manually as CSV from [stats.pacificdata.org](https://s
 - HTML/CSS — written through JSX + Tailwind, not hand-authored separately
 
 **Data pipeline**
-- Pandas — clean official CSV exports into 5 small static JSON files (one per metric), scoped to the four chosen countries and one event window
+- Pandas — clean official CSV exports into 5 small static JSON files (one per metric), scoped to the four chosen countries and one event window *(two more Pandas scripts were added post-submission for the other hazards; see "Beyond the Submission" below)*
 - *(GeoPandas skipped — no raw shapefile processing needed; the map uses a pre-made TopoJSON, `public/land-50m.json`)*
 
 **Frontend**
@@ -130,12 +130,25 @@ The core question — *why do places hit by the same climate hazard end up in su
 
 - **Officially reviewed Pacific sources only**, same standard as the original submission — no scraped or unofficial data.
 - **No invented composite score.** Where a hazard page shows real indicators, they're shown as raw per-nation figures side by side, never blended into a single "risk" or "suffering" index. Collapsing multiple indicators into one invented number is easy to get wrong and hard to defend; raw figures let a reader draw their own conclusion, which fits this project's voice better than a manufactured ranking would.
-- **Honest about what's real.** A hazard page whose data pipeline isn't built yet says so plainly — see the "waiting on data" placeholders on its numeric sections and the homepage card's status note — rather than shipping placeholder numbers that could be mistaken for real ones.
+- **Honest about what's real.** A hazard page whose data isn't fully built out says so plainly in its own footer — see each page's "About this page" section for exactly what's real and what's still coming — rather than shipping placeholder numbers that could be mistaken for real ones.
 - **Nation set varies by hazard**, rather than forcing the same four countries onto every page. Each hazard page uses whichever nations that hazard's official data actually covers well; which nations even have usable data for a given hazard is itself part of the inequality story.
 
 ### Status
 
-Home, Cyclones, El Niño & Drought, and Sea Level Rise all exist as real, navigable pages sharing one design system (see `src/content/hazards.js`, the single registry the nav and homepage grid both read from). Cyclones is fully wired to real data, same as it always was. El Niño & Drought and Sea Level Rise have real hero framing, a real explainer, and a real interactive map with each hazard's actual nation set — but their numeric sections are still placeholders, since the drought/water-security and tide-gauge/exposure data pipelines haven't been built yet. Each page's own footer lists the real, official sources those pipelines will eventually draw from.
+Home, Cyclones, El Niño & Drought, and Sea Level Rise all exist as real, navigable pages sharing one design system (see `src/content/hazards.js`, the single registry the nav and homepage grid both read from). All three hazard pages are wired to real data, not placeholders:
+
+- **Cyclones** — unchanged from submission: the original ripple chain (disaster → economic loss → crop yield → power generation → tourist arrivals) for Vanuatu, Fiji, Tonga, and Solomon Islands.
+- **El Niño & Drought** — SPI-12 and SPEI-12 (12-month Standardized Precipitation / Precipitation-Evapotranspiration Index), the World Bank Pacific Observatory's own drought indices, 1958–2021, for Kiribati, Papua New Guinea, Marshall Islands, Federated States of Micronesia, and Fiji. Cleaned by `data-pipeline/clean_drought_data.py`.
+- **Sea Level Rise** — monthly tide-gauge readings from the Australian Bureau of Meteorology's Pacific Sea Level Monitoring Project (SEAFRAME network), for Tuvalu, Kiribati, Marshall Islands, Tonga, Fiji, and Cook Islands, most running from the early-to-mid 1990s to today. Reported as each station's own anomaly relative to its own long-term average, plus a per-station trend in mm/year — not raw readings, since each tide gauge's benchmark is local and not directly comparable across stations. Cleaned by `data-pipeline/clean_sea_level_data.py`.
+
+What's still a real, disclosed gap rather than a placeholder: reported drought impact and water-storage capacity for the drought page, and land area within two metres of current sea level plus coastal population exposure for the sea level page. Both pages' footers name the sources that gap will eventually be drawn from — the physical/meteorological signal is real; the human side of exposure and impact isn't built yet.
+
+### Also since submission
+
+- **Dark mode** — defaults to the visitor's OS preference, remembers an explicit choice.
+- **In-page section navigation** — the hamburger menu in the header, for jumping directly to a section on longer pages.
+- A bolder, more distinct homepage treatment, kept separate from the calmer hazard-page look.
+- Component consolidation: the three hazard pages' near-identical "regional snapshot" and "compare nations" chart sections now share two common components (`MetricSnapshotChart`, `TrendChart`) instead of three independent copies each; the three data-loading hooks share one (`useMetricData`).
 
 ---
 
