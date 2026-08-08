@@ -6,10 +6,12 @@ import RippleChain from '../components/RippleChain.jsx'
 import ComparisonView from '../components/ComparisonView.jsx'
 import CitationPanel from '../components/CitationPanel.jsx'
 import PacificBorder from '../components/PacificBorder.jsx'
-import { useSelection } from '../hooks/useSelection.js'
-import { useRippleData } from '../hooks/useRippleData.js'
+import { useSelection, selectionAnnouncement } from '../hooks/useSelection.js'
+import { useMetricData } from '../hooks/useMetricData.js'
 import { useTheme } from '../hooks/useTheme.jsx'
+import { METRICS } from '../utils/metrics.js'
 import { sectionColorsFor } from '../utils/theme.js'
+import { delayStyle } from '../utils/motion.js'
 
 // The original Ripple site, unchanged in substance -- this is the same
 // content that used to live directly in App.jsx before the site grew
@@ -57,18 +59,9 @@ const DATA_SOURCES = [
 const SECTION_TONES = ['plain', 'plain', 'panel', 'plain', 'plain', 'panel']
 const FOOTER_TONE = 'ink'
 
-function delayStyle(index) {
-  return { animationDelay: `${index * 90}ms` }
-}
-
-function selectionAnnouncement(selected) {
-  if (selected.length === 0) return ''
-  if (selected.length === 1) return `${selected[0]} selected. Showing its ripple chain below.`
-  return `Comparing ${selected[0]} and ${selected[1]}.`
-}
 
 export default function CyclonesPage() {
-  const data = useRippleData()
+  const data = useMetricData(METRICS)
   const { selected, toggle, clear } = useSelection()
   const { theme } = useTheme()
   const colors = sectionColorsFor(theme)
@@ -80,7 +73,7 @@ export default function CyclonesPage() {
       {/* Announces selection changes to screen readers, since the
           charts/comparison view below otherwise update silently. */}
       <div aria-live="polite" className="sr-only">
-        {selectionAnnouncement(selected)}
+        {selectionAnnouncement(selected, 'Showing its ripple chain below.')}
       </div>
 
       <div id="top">

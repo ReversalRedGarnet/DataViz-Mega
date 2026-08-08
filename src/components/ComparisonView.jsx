@@ -1,5 +1,6 @@
 import { METRICS, EVENT_YEAR } from '../utils/metrics.js'
 import { SELECTION_COLORS } from '../utils/theme.js'
+import { pctChange } from '../utils/rows.js'
 import { useTooltip } from '../hooks/useTooltip.js'
 import Section from './Section.jsx'
 import EmptyState from './EmptyState.jsx'
@@ -52,10 +53,6 @@ export default function ComparisonView({ data, selectedNations, style }) {
   )
 }
 
-function pctChange(from, to) {
-  if (!from) return null
-  return ((to - from) / Math.abs(from)) * 100
-}
 
 function NationSummary({ nation, data, color, index, showTooltip, hideTooltip }) {
   return (

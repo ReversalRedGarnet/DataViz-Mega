@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { METRICS } from '../utils/metrics.js'
 import { buildComparativeInsights } from '../utils/insights.js'
+import { rowsByMetricForNations } from '../utils/rows.js'
 import { useTooltip } from '../hooks/useTooltip.js'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
@@ -26,24 +27,13 @@ import Tooltip from './Tooltip.jsx'
 export default function RippleChain({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
-  // Filtering here (rather than inline in the METRICS.map below) and
-  // memoizing on [data, selectedNations] matters more than it looks:
-  // the tooltip state above lives in this component, so hovering a
-  // chart point re-renders RippleChain. Without memoizing, every hover
-  // would produce brand-new `allRows` arrays for all five charts,
-  // which -- since each chart's draw effect depends on `allRows` --
-  // would re-run every D3 draw and replay every entrance animation on
-  // every single hover. Memoizing keeps those array references stable
-  // across a tooltip-only re-render, so only an actual selection
-  // change redraws the charts.
-  const filteredByMetric = useMemo(() => {
-    if (!data) return null
-    const result = {}
-    for (const m of METRICS) {
-      result[m.key] = data[m.key].filter((d) => selectedNations.includes(d.nation))
-    }
-    return result
-  }, [data, selectedNations])
+  // Memoised deliberately -- see rowsByMetricForNations' own note: the
+  // tooltip state above lives in this component, so an unmemoised
+  // filter would redraw every chart on every hover.
+  const filteredByMetric = useMemo(
+    () => rowsByMetricForNations(data, METRICS, selectedNations),
+    [data, selectedNations]
+  )
 
   const insights = useMemo(() => {
     if (!data || selectedNations.length !== 2) return null

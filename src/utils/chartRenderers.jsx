@@ -12,6 +12,12 @@ function slug(nation) {
   return nation.replace(/\s+/g, '')
 }
 
+// Axis labels use only the first word of a nation's name -- "Marshall",
+// not "Marshall Islands" -- so six labels fit under a 260px chart.
+function firstWord(nation) {
+  return nation.split(' ')[0]
+}
+
 // Every metric this file originally charted (people affected, USD
 // loss, crop yield, tourist arrivals, GWh) is non-negative, so the
 // y-domain was always simply [0, max*1.1] -- a bar or line could only
@@ -45,6 +51,44 @@ function barTopAndHeight(y, value) {
   const yZero = y(0)
   const yValue = y(value)
   return { top: Math.min(yZero, yValue), height: Math.abs(yZero - yValue) }
+}
+
+const INT_FORMAT = d3.format('d')
+
+// The three charts in this file share one axis look: no y-domain line,
+// faint full-width gridlines, small ink-coloured tick text tracking the
+// current theme. Only the tick generators differ, so callers build the
+// axis and these two apply the styling.
+function drawYAxis(svg, y, { ink, width, margin, tickFormat }) {
+  const g = svg
+    .append('g')
+    .attr('transform', `translate(${margin.left},0)`)
+    .call(
+      d3
+        .axisLeft(y)
+        .ticks(4)
+        .tickFormat(tickFormat)
+        .tickSize(-(width - margin.left - margin.right))
+    )
+  g.select('.domain').remove()
+  g.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
+  g.selectAll('.tick text')
+    .attr('fill', ink)
+    .attr('fill-opacity', 0.65)
+    .attr('font-size', 9)
+    .attr('dx', -2)
+  return g
+}
+
+function drawXAxis(svg, axis, { ink, height, margin }) {
+  const g = svg
+    .append('g')
+    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .call(axis)
+  g.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  g.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
+  g.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
+  return g
 }
 
 function pointTooltip(nation, year, value, format) {
@@ -129,32 +173,12 @@ export function renderMetricChart(
     .nice()
     .range([height - margin.bottom, margin.top])
 
-  const yAxisG = svg
-    .append('g')
-    .attr('transform', `translate(${margin.left},0)`)
-    .call(
-      d3
-        .axisLeft(y)
-        .ticks(4)
-        .tickFormat(yTickFormat)
-        .tickSize(-(width - margin.left - margin.right))
-    )
-  yAxisG.select('.domain').remove()
-  yAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
-  yAxisG
-    .selectAll('.tick text')
-    .attr('fill', ink)
-    .attr('fill-opacity', 0.65)
-    .attr('font-size', 9)
-    .attr('dx', -2)
-
-  const xAxisG = svg
-    .append('g')
-    .attr('transform', `translate(0,${height - margin.bottom})`)
-    .call(isBand ? d3.axisBottom(x).tickSizeOuter(0) : d3.axisBottom(x).ticks(4).tickFormat(d3.format('d')))
-  xAxisG.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
+  drawYAxis(svg, y, { ink, width, margin, tickFormat: yTickFormat })
+  drawXAxis(
+    svg,
+    isBand ? d3.axisBottom(x).tickSizeOuter(0) : d3.axisBottom(x).ticks(4).tickFormat(INT_FORMAT),
+    { ink, height, margin }
+  )
 
   function wireMarkInteractions(selection, nation, growTo) {
     selection
@@ -298,32 +322,8 @@ export function renderStormProfileChart(svg, { rows, showTooltip, hideTooltip, t
     .nice()
     .range([height - margin.bottom, margin.top])
 
-  const yAxisG = svg
-    .append('g')
-    .attr('transform', `translate(${margin.left},0)`)
-    .call(
-      d3
-        .axisLeft(y)
-        .ticks(4)
-        .tickFormat(d3.format('d'))
-        .tickSize(-(width - margin.left - margin.right))
-    )
-  yAxisG.select('.domain').remove()
-  yAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
-  yAxisG
-    .selectAll('.tick text')
-    .attr('fill', ink)
-    .attr('fill-opacity', 0.65)
-    .attr('font-size', 9)
-    .attr('dx', -2)
-
-  const xAxisG = svg
-    .append('g')
-    .attr('transform', `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format('d')))
-  xAxisG.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
+  drawYAxis(svg, y, { ink, width, margin, tickFormat: INT_FORMAT })
+  drawXAxis(svg, d3.axisBottom(x).ticks(5).tickFormat(INT_FORMAT), { ink, height, margin })
 
   svg
     .append('text')
@@ -413,32 +413,8 @@ export function renderSnapshotChart(
     .nice()
     .range([height - margin.bottom, margin.top])
 
-  const yAxisG = svg
-    .append('g')
-    .attr('transform', `translate(${margin.left},0)`)
-    .call(
-      d3
-        .axisLeft(y)
-        .ticks(4)
-        .tickFormat(yTickFormat)
-        .tickSize(-(width - margin.left - margin.right))
-    )
-  yAxisG.select('.domain').remove()
-  yAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.08)
-  yAxisG
-    .selectAll('.tick text')
-    .attr('fill', ink)
-    .attr('fill-opacity', 0.65)
-    .attr('font-size', 9)
-    .attr('dx', -2)
-
-  const xAxisG = svg
-    .append('g')
-    .attr('transform', `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(x).tickSizeOuter(0).tickFormat((d) => d.split(' ')[0]))
-  xAxisG.select('.domain').attr('stroke', ink).attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick line').attr('stroke', ink).attr('stroke-opacity', 0.25)
-  xAxisG.selectAll('.tick text').attr('fill', ink).attr('fill-opacity', 0.7).attr('font-size', 9)
+  drawYAxis(svg, y, { ink, width, margin, tickFormat: yTickFormat })
+  drawXAxis(svg, d3.axisBottom(x).tickSizeOuter(0).tickFormat(firstWord), { ink, height, margin })
 
   const bars = svg
     .selectAll('rect.snapshot-bar')

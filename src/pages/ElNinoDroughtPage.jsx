@@ -5,10 +5,12 @@ import MapView from '../components/MapView.jsx'
 import DroughtSnapshot from '../components/DroughtSnapshot.jsx'
 import DroughtTrends from '../components/DroughtTrends.jsx'
 import CitationPanel from '../components/CitationPanel.jsx'
-import { useSelection } from '../hooks/useSelection.js'
-import { useDroughtData } from '../hooks/useDroughtData.js'
+import { useSelection, selectionAnnouncement } from '../hooks/useSelection.js'
+import { useMetricData } from '../hooks/useMetricData.js'
 import { useTheme } from '../hooks/useTheme.jsx'
+import { METRICS } from '../utils/droughtMetrics.js'
 import { sectionColorsFor } from '../utils/theme.js'
+import { delayStyle } from '../utils/motion.js'
 
 // El Niño reaches every Pacific nation on roughly the same 2-7 year
 // cycle; which nations have water security when it arrives is a
@@ -76,19 +78,10 @@ const SOURCES = [
 const SECTION_TONES = ['plain', 'plain', 'panel', 'plain', 'panel']
 const FOOTER_TONE = 'ink'
 
-function delayStyle(index) {
-  return { animationDelay: `${index * 90}ms` }
-}
-
-function selectionAnnouncement(selected) {
-  if (selected.length === 0) return ''
-  if (selected.length === 1) return `${selected[0]} selected.`
-  return `Comparing ${selected[0]} and ${selected[1]}.`
-}
 
 export default function ElNinoDroughtPage() {
   const { selected, toggle, clear } = useSelection()
-  const data = useDroughtData()
+  const data = useMetricData(METRICS)
   const { theme } = useTheme()
   const colors = sectionColorsFor(theme)
   const [heroTone, glanceTone, snapshotTone, mapTone, compareTone] = SECTION_TONES

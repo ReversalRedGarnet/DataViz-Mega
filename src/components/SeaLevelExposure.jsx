@@ -6,6 +6,7 @@ import InsightsPanel from './InsightsPanel.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
 import { METRICS, REFERENCE_YEAR } from '../utils/seaLevelExposureMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
+import { missingNations, snapshotRowsByMetric } from '../utils/rows.js'
 
 // Regional snapshot of who actually lives within reach of sea level --
 // complements SeaLevelSnapshot.jsx's mm/year trend with a different
@@ -23,7 +24,11 @@ import { formatNationList } from '../utils/formatNationList.js'
 //   style -- forwarded to the underlying Section
 export default function SeaLevelExposure({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
-  const snapshots = useMemo(() => computeSnapshots(data?.series, nations), [data, nations])
+  const nationNames = useMemo(() => nations.map((n) => n.name), [nations])
+  const snapshots = useMemo(
+    () => snapshotRowsByMetric(data?.series, METRICS, REFERENCE_YEAR, nationNames),
+    [data, nationNames]
+  )
 
   if (!data) {
     return (
@@ -50,7 +55,7 @@ export default function SeaLevelExposure({ data, nations, style }) {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           {METRICS.map((m, i) => {
             const rows = snapshots[m.key]
-            const nationsMissing = nations.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
+            const nationsMissing = missingNations(nationNames, rows)
             return (
               <MetricSnapshotChart
                 key={m.key}
@@ -77,19 +82,3 @@ export default function SeaLevelExposure({ data, nations, style }) {
   )
 }
 
-// One row per nation that has a REFERENCE_YEAR figure for this metric
-// -- same reasoning as every other snapshot on this site: a missing
-// nation is shown as missing, not quietly backfilled from a different
-// year.
-function computeSnapshots(series, nations) {
-  if (!series) return null
-  const order = nations.map((n) => n.name)
-  const result = {}
-  for (const m of METRICS) {
-    result[m.key] = (series[m.key] ?? [])
-      .filter((d) => d.year === REFERENCE_YEAR)
-      .map((d) => ({ nation: d.nation, value: d[m.field] }))
-      .sort((a, b) => order.indexOf(a.nation) - order.indexOf(b.nation))
-  }
-  return result
-}

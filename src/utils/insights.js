@@ -1,4 +1,5 @@
 import { METRICS, EVENT_YEAR } from './metrics.js'
+import { pctChange } from './rows.js'
 
 // One bullet per metric (five total) comparing the two selected
 // nations from the event year to the latest year on record --
@@ -9,10 +10,6 @@ import { METRICS, EVENT_YEAR } from './metrics.js'
 //
 // Returns [{ key, text }], always exactly METRICS.length entries.
 
-function pctChange(from, to) {
-  if (!from) return null // a zero (or missing) baseline makes a % change meaningless
-  return ((to - from) / Math.abs(from)) * 100
-}
 
 function formatPct(p) {
   if (p === null) return null

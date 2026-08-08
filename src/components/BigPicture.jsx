@@ -6,10 +6,16 @@ import { useTooltip } from '../hooks/useTooltip.js'
 import { NATIONS } from './MapView.jsx'
 import { EVENT_YEAR, METRICS } from '../utils/metrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
+import { missingNations, snapshotRowsByMetric } from '../utils/rows.js'
+
+const NATION_NAMES = NATIONS.map((n) => n.name)
 
 export default function BigPicture({ data, style }) {
   const stats = useMemo(() => computeStats(data), [data])
-  const snapshots = useMemo(() => computeSnapshots(data), [data])
+  const snapshots = useMemo(
+    () => snapshotRowsByMetric(data, METRICS, EVENT_YEAR, NATION_NAMES),
+    [data]
+  )
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
   return (
@@ -78,7 +84,7 @@ export default function BigPicture({ data, style }) {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {METRICS.map((m, i) => {
                 const rows = snapshots[m.key]
-                const nationsMissing = NATIONS.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
+                const nationsMissing = missingNations(NATION_NAMES, rows)
                 return (
                   <MetricSnapshotChart
                     key={m.key}
@@ -138,22 +144,3 @@ function computeStats(data) {
   return { totalAffected, maxNation: max.nation, minNation: min.nation, ratio, economicLossReported }
 }
 
-// One row per nation that actually has an EVENT_YEAR figure for this
-// metric -- deliberately NOT falling back to "nearest available year"
-// for nations missing EVENT_YEAR data. This chart's whole point is a
-// same-moment comparison; silently mixing in a different year for one
-// nation would undermine the exact thing it's trying to show.
-function computeSnapshots(data) {
-  if (!data) return null
-  const result = {}
-  for (const m of METRICS) {
-    result[m.key] = (data[m.key] ?? [])
-      .filter((d) => d.year === EVENT_YEAR)
-      .map((d) => ({ nation: d.nation, value: d[m.field] }))
-      .sort(
-        (a, b) =>
-          NATIONS.findIndex((n) => n.name === a.nation) - NATIONS.findIndex((n) => n.name === b.nation)
-      )
-  }
-  return result
-}

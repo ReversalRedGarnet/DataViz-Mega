@@ -37,9 +37,6 @@ export function sectionColorsFor(theme) {
   return SECTION_COLORS_BY_THEME[theme] ?? SECTION_COLORS_BY_THEME.light
 }
 
-// Fallback for any call site not yet made theme-aware -- the light
-// palette, i.e. the only palette that existed before dark mode.
-export const SECTION_COLORS = SECTION_COLORS_BY_THEME.light
 
 // Axis text/gridline color for D3-drawn charts (chartRenderers.jsx).
 // Chart marks (bars/lines/points) keep SELECTION_COLORS regardless of

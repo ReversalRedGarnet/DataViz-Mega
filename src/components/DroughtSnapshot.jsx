@@ -6,6 +6,7 @@ import MetricSnapshotChart from './MetricSnapshotChart.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
 import { METRICS, REFERENCE_YEAR } from '../utils/droughtMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
+import { missingNations, snapshotRowsByMetric } from '../utils/rows.js'
 
 // Computed once at module load, not inside the component -- d3.format
 // returns a brand-new function object on every call, even with the
@@ -25,14 +26,18 @@ const YTICK_FORMAT = d3.format('.2f')
 // 64-year climate cycle doesn't reduce to four tiles the same way.
 //
 // Props:
-//   data -- { [metricKey]: rows }, from useDroughtData()
+//   data -- { [metricKey]: rows }, from useMetricData(METRICS)
 //   nations -- the page's own nation list (array of { name, ... }),
 //     read here only for display order, matching how MapView already
 //     receives its own nations prop from the same page
 //   style -- forwarded to the underlying Section
 export default function DroughtSnapshot({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
-  const snapshots = useMemo(() => computeSnapshots(data, nations), [data, nations])
+  const nationNames = useMemo(() => nations.map((n) => n.name), [nations])
+  const snapshots = useMemo(
+    () => snapshotRowsByMetric(data, METRICS, REFERENCE_YEAR, nationNames),
+    [data, nationNames]
+  )
 
   if (!data) {
     return (
@@ -56,7 +61,7 @@ export default function DroughtSnapshot({ data, nations, style }) {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           {METRICS.map((m, i) => {
             const rows = snapshots[m.key]
-            const nationsMissing = nations.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n))
+            const nationsMissing = missingNations(nationNames, rows)
             return (
               <MetricSnapshotChart
                 key={m.key}
@@ -81,20 +86,3 @@ export default function DroughtSnapshot({ data, nations, style }) {
   )
 }
 
-// One row per nation that has a REFERENCE_YEAR figure for this metric
-// -- deliberately not falling back to a nearby year for a nation
-// that's missing REFERENCE_YEAR, same reasoning as BigPicture.jsx's
-// computeSnapshots: the whole point is a same-moment comparison, so a
-// missing nation is shown as missing rather than quietly backfilled.
-function computeSnapshots(data, nations) {
-  if (!data) return null
-  const order = nations.map((n) => n.name)
-  const result = {}
-  for (const m of METRICS) {
-    result[m.key] = (data[m.key] ?? [])
-      .filter((d) => d.year === REFERENCE_YEAR)
-      .map((d) => ({ nation: d.nation, value: d[m.field] }))
-      .sort((a, b) => order.indexOf(a.nation) - order.indexOf(b.nation))
-  }
-  return result
-}

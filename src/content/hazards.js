@@ -45,7 +45,3 @@ export const HAZARDS = [
     status: 'shell',
   },
 ]
-
-export function findHazard(slug) {
-  return HAZARDS.find((h) => h.slug === slug) ?? null
-}

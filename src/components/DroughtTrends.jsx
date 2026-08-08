@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import * as d3 from 'd3'
 import { METRICS, DROUGHT_THRESHOLD } from '../utils/droughtMetrics.js'
 import { useTooltip } from '../hooks/useTooltip.js'
+import { rowsByMetricForNations } from '../utils/rows.js'
 import Section from './Section.jsx'
 import SelectionLegend from './SelectionLegend.jsx'
 import EmptyState from './EmptyState.jsx'
@@ -22,25 +23,17 @@ const YTICK_FORMAT = d3.format('.2f')
 // single event changed things.
 //
 // Props:
-//   data -- { [metricKey]: rows }, from useDroughtData()
+//   data -- { [metricKey]: rows }, from useMetricData(METRICS)
 //   selectedNations -- ordered array of nation names selected on the
 //     map; order drives colour, kept in sync with the map's badges
 //   style -- forwarded to the underlying Section
 export default function DroughtTrends({ data, selectedNations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
-  // Same memoisation reasoning as RippleChain.jsx: the tooltip state
-  // above lives in this component, so a hover re-renders it, and
-  // without memoising, every hover would hand each chart a brand new
-  // array reference and replay its entrance animation.
-  const filteredByMetric = useMemo(() => {
-    if (!data) return null
-    const result = {}
-    for (const m of METRICS) {
-      result[m.key] = data[m.key].filter((d) => selectedNations.includes(d.nation))
-    }
-    return result
-  }, [data, selectedNations])
+  const filteredByMetric = useMemo(
+    () => rowsByMetricForNations(data, METRICS, selectedNations),
+    [data, selectedNations]
+  )
 
   const droughtYearCounts = useMemo(() => {
     if (!data || selectedNations.length !== 2) return null

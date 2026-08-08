@@ -21,3 +21,12 @@ export function useSelection() {
 
   return { selected, toggle, clear }
 }
+
+// Copy for each page's aria-live region -- the charts below it update
+// silently otherwise. `singleNote` is an optional extra sentence for
+// the one-nation case (Cyclones points at its ripple chain).
+export function selectionAnnouncement(selected, singleNote = '') {
+  if (selected.length === 0) return ''
+  if (selected.length === 1) return `${selected[0]} selected.${singleNote ? ` ${singleNote}` : ''}`
+  return `Comparing ${selected[0]} and ${selected[1]}.`
+}

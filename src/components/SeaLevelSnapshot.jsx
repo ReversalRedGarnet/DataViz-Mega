@@ -6,6 +6,7 @@ import MetricSnapshotChart from './MetricSnapshotChart.jsx'
 import { useTooltip } from '../hooks/useTooltip.js'
 import { TREND_METRIC } from '../utils/seaLevelMetrics.js'
 import { formatNationList } from '../utils/formatNationList.js'
+import { byNationOrder, missingNations } from '../utils/rows.js'
 
 // Computed once at module load, not inline in JSX -- see
 // DroughtSnapshot.jsx for why an inline d3.format() call would cause
@@ -29,15 +30,16 @@ const YTICK_FORMAT = d3.format('.1f')
 export default function SeaLevelSnapshot({ data, nations, style }) {
   const { containerRef, tooltip, showTooltip, hideTooltip } = useTooltip()
 
+  const nationNames = useMemo(() => nations.map((n) => n.name), [nations])
+
   const rows = useMemo(() => {
     if (!data) return []
-    const order = nations.map((n) => n.name)
     return (data.trend ?? [])
       .map((d) => ({ nation: d.nation, value: d[TREND_METRIC.field] }))
-      .sort((a, b) => order.indexOf(a.nation) - order.indexOf(b.nation))
-  }, [data, nations])
+      .sort(byNationOrder(nationNames))
+  }, [data, nationNames])
 
-  const nationsMissing = data ? nations.map((n) => n.name).filter((n) => !rows.some((d) => d.nation === n)) : []
+  const nationsMissing = data ? missingNations(nationNames, rows) : []
 
   if (!data) {
     return (

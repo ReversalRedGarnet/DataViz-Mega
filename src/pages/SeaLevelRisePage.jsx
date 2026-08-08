@@ -6,11 +6,12 @@ import SeaLevelSnapshot from '../components/SeaLevelSnapshot.jsx'
 import SeaLevelExposure from '../components/SeaLevelExposure.jsx'
 import SeaLevelTrends from '../components/SeaLevelTrends.jsx'
 import CitationPanel from '../components/CitationPanel.jsx'
-import { useSelection } from '../hooks/useSelection.js'
+import { useSelection, selectionAnnouncement } from '../hooks/useSelection.js'
 import { useSeaLevelData } from '../hooks/useSeaLevelData.js'
 import { useSeaLevelExposureData } from '../hooks/useSeaLevelExposureData.js'
 import { useTheme } from '../hooks/useTheme.jsx'
 import { sectionColorsFor } from '../utils/theme.js'
+import { delayStyle } from '../utils/motion.js'
 
 // The ocean rises at close to the same rate everywhere it's measured;
 // what stands in its way is not the same everywhere. Same "shared
@@ -88,15 +89,6 @@ const SOURCES = [
 const SECTION_TONES = ['plain', 'plain', 'panel', 'panel', 'plain', 'panel']
 const FOOTER_TONE = 'ink'
 
-function delayStyle(index) {
-  return { animationDelay: `${index * 90}ms` }
-}
-
-function selectionAnnouncement(selected) {
-  if (selected.length === 0) return ''
-  if (selected.length === 1) return `${selected[0]} selected.`
-  return `Comparing ${selected[0]} and ${selected[1]}.`
-}
 
 export default function SeaLevelRisePage() {
   const { selected, toggle, clear } = useSelection()

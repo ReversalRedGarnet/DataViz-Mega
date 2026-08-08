@@ -6,6 +6,7 @@ import CitationPanel from '../components/CitationPanel.jsx'
 import { HAZARDS } from '../content/hazards.js'
 import { useTheme } from '../hooks/useTheme.jsx'
 import { sectionColorsFor } from '../utils/theme.js'
+import { delayStyle } from '../utils/motion.js'
 
 // 'ink' for the hero, not 'plain' -- Home is the one deliberate
 // exception to the site's otherwise-quiet look (see PageHero.jsx and
@@ -15,9 +16,6 @@ import { sectionColorsFor } from '../utils/theme.js'
 const SECTION_TONES = ['ink', 'panel']
 const FOOTER_TONE = 'ink'
 
-function delayStyle(index) {
-  return { animationDelay: `${index * 90}ms` }
-}
 
 // The site's hub: the same thesis Cyclones has always carried, now
 // stated once at the top level rather than implied by a single story.
